@@ -1,10 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { nixpkgs, flake-utils, ... }:
@@ -14,7 +11,7 @@
       in {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
-            swiProlog
+            swi-prolog
           ];
         };
       });
