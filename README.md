@@ -20,9 +20,9 @@ Repozytorium zawiera rozwiązania 3 zadań projektowych z przedmiotu [Paradygmat
 
 ## Instalacja
 #### 1. Sklonuj repozytorium:
-    ```bash
-    git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
-    ```
+```bash
+git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
+```
 #### 2. Zainstaluj wymagane zależności:
 - Debian-based
     ```bash
