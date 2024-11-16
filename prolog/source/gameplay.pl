@@ -95,34 +95,35 @@ look :-
     i_am_at(Place),
     describe(Place),
     nl,
-    notice_objects_at(Place),
-    nl.
+    notice_at(Place).
 
-/* These rules set up a loop to mention all the objects
-in your vicinity. */
-
-notice_objects_at(Place) :-
-    at(X, Place),
-    write('There is a '), write(X), write(' here.'), nl,
+notice_at(Place) :-
+    findall(X, at(X, Place), Entities),
+    write_options(Entities),
     fail.
 
-notice_objects_at(_).
+notice_at(_).
 
-notice_people_at(Place) :-
-    at(X, Place),
-    write('There is a '), write(X), write(' here.'), nl,
-    fail.
+write_options([]).
+write_options(Xs) :-
+    Xs \= [],
+    write('Interactions: '), nl,
+    write_options(Xs, ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l']), nl.
 
-notice_people_at(_).
+write_options([], _).
+write_options(_, []).
+write_options([X|Xs], [Letter|Letters]) :-
+    write('  '), write(Letter), write(') '), write(X), nl,
+    write_options(Xs, Letters).
 
 /* This rule tells you to look at your inventory. */
 
-print_items([]).
-print_items([X|Xs]) :-
+write_items([]).
+write_items([X|Xs]) :-
     write(' --> '), write(X), nl,
-    print_items(Xs).
+    write_items(Xs).
 
 inventory :- 
     findall(Item, holding(Item), Items),
-    print_items(Items).
+    write_items(Items).
     
