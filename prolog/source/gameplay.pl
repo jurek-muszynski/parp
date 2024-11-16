@@ -89,6 +89,24 @@ go(Direction) :-
 go(_) :-
     write("You can't go that way.").
 
+/* This rule tells how to interact with people and items */
+
+interact(Option) :-
+    \+ in_dialog(_),
+    i_am_at(Place),
+    findall(X, at(X, Place), Entities),
+    nth0(Option, Entities, Entity),
+    (is_person(Entity) -> talk_to(Entity) ; take(Entity)),
+    !.
+
+interact(Option) :-
+    in_dialog(Person),
+    findall(Line, dialog_line(Person, Line, _), Lines),
+    nth0(Option, Lines, DialogLine),
+    dialog_line(Person, DialogLine, Response),
+    Response,
+    !.
+
 /* This rule tells how to look around you. */
 
 look :-
@@ -108,7 +126,8 @@ write_options([]).
 write_options(Xs) :-
     Xs \= [],
     write('Interactions: '), nl,
-    write_options(Xs, ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l']), nl.
+    options(Options),
+    write_options(Xs, Options), nl.
 
 write_options([], _).
 write_options(_, []).
@@ -126,4 +145,3 @@ write_items([X|Xs]) :-
 inventory :- 
     findall(Item, holding(Item), Items),
     write_items(Items).
-    

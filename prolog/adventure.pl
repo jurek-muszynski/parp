@@ -1,5 +1,5 @@
-:- dynamic i_am_at/1, holding/1, at/2.
-:- multifile initialize/1.
+:- dynamic i_am_at/1, holding/1, at/2, in_dialog/1.
+:- multifile initialize/1, options/1.
 
 import_source :-
     [source/locations],
@@ -13,15 +13,25 @@ reset :-
     retractall(i_am_at(_)),
     retractall(alive(_)),
     retractall(holding(_)),
+    retractall(in_dialog(_)),
     assert(i_am_at(padded_cell)).
 
 n :- go(n).
-
 s :- go(s).
-
 e :- go(e).
-
 w :- go(w).
+
+a :- interact(0).
+b :- interact(1).
+c :- interact(2).
+d :- interact(3).
+f :- interact(4).
+g :- interact(5).
+h :- interact(6).
+i :- interact(7).
+j :- interact(8).
+k :- interact(9).
+l :- interact(10).
 
 die :-
     finish.
