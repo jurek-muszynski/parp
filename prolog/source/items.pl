@@ -1,11 +1,13 @@
-:- multifile at/2.
+:- dynamic at/2.
+:- multifile initialize/1.
 
 /* Items at locations */
-at(padded_cell_key, padded_cell).
-at(exit_key, basement).
-at(patient_file, exam_room1).
-at(discharge_form, restroom).
-at(set_of_notes, exam_room2).
+initialize(items) :-
+    assert(at(padded_cell_key, padded_cell)),
+    assert(at(exit_key, basement)),
+    assert(at(patient_file, exam_room1)),
+    assert(at(discharge_form, restroom)),
+    assert(at(set_of_notes, exam_room2)).
 
 /* Items capabilities */
 can_unlock(door(padded_cell, s, hallway_one)) :- holding(padded_cell_key).
