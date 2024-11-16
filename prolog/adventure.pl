@@ -50,7 +50,7 @@ instructions :-
     nl,
     write('Enter commands using standard Prolog syntax.'), nl,
     write('Available commands are:'), nl,
-    write('start.                   -- to start the game.'), nl,
+    write('start.                   -- to start or reset the game.'), nl,
     write('n.  s.  e.  w.           -- to go in that direction.'), nl,
     write('take(Object).            -- to pick up an object.'), nl,
     write('drop(Object).            -- to put down an object.'), nl,
