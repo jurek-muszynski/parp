@@ -1,7 +1,9 @@
-:- multifile at/2.
+:- dynamic at/2.
+:- multifile initialize/1.
 
-at(receptionist, reception).
-at(doctor, exam_room1).
+initialize(people) :-
+    assert(at(receptionist, reception)),
+    assert(at(doctor, exam_room1)).
 
 talk_to(doctor) :-
     i_am_at(exam_room1),

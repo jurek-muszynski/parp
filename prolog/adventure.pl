@@ -1,14 +1,19 @@
-:- dynamic i_am_at/1, holding/1.
-:- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
-:- multifile at/2.
+:- dynamic i_am_at/1, holding/1, at/2.
+:- multifile initialize/1.
 
-:- [source/locations].
-:- [source/items].
-:- [source/actions].
-:- [source/gameplay].
-:- [source/consts].
+import_source :-
+    [source/locations],
+    [source/items],
+    [source/actions],
+    [source/gameplay],
+    [source/consts].
 
-i_am_at(padded_cell).
+reset :-
+    retractall(at(_, _)),
+    retractall(i_am_at(_)),
+    retractall(alive(_)),
+    retractall(holding(_)),
+    assert(i_am_at(padded_cell)).
 
 n :- go(n).
 
@@ -45,7 +50,7 @@ instructions :-
     nl,
     write('Enter commands using standard Prolog syntax.'), nl,
     write('Available commands are:'), nl,
-    write('start.                   -- to start the game.'), nl,
+    write('start.                   -- to start or reset the game.'), nl,
     write('n.  s.  e.  w.           -- to go in that direction.'), nl,
     write('take(Object).            -- to pick up an object.'), nl,
     write('drop(Object).            -- to put down an object.'), nl,
@@ -60,4 +65,8 @@ instructions :-
     nl.
 
 start :-
+    import_source,
+    reset,
+    initialize(items),
+    initialize(people),
     write("You wake up in a padded cell. You don't remember how you got here, but you know you need to escape."), nl.
