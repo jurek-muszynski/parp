@@ -117,7 +117,12 @@ notice_people_at(_).
 
 /* This rule tells you to look at your inventory. */
 
-inventory :-
-    \+ (holding(_)) ->
-        write('You are empty handed.'), nl; 
-        (write('You have: '), nl, (holding(X), write(' --> '), write(X), nl, fail ; true)).
+print_items([]).
+print_items([X|Xs]) :-
+    write(' --> '), write(X), nl,
+    print_items(Xs).
+
+inventory :- 
+    findall(Item, holding(Item), Items),
+    print_items(Items).
+    
