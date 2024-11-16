@@ -1,3 +1,5 @@
+:- multifile write_dialog_options/1.
+
 /* These rules describe how to pick up an object. */
 
 take(X) :-
@@ -132,8 +134,20 @@ write_options(Xs) :-
 write_options([], _).
 write_options(_, []).
 write_options([X|Xs], [Letter|Letters]) :-
-    write('  '), write(Letter), write(') '), write(X), nl,
+    write('  ('), write(Letter), write(') '),
+    (is_person(X) -> write('Talk to the ') ; write('Pick up the ')),
+    write(X), nl,
     write_options(Xs, Letters).
+
+write_dialog_options(Xs) :-
+    write('Dialog options: '), nl,
+    options(Options),
+    write_dialog_options(Xs, Options).
+
+write_dialog_options([], _).
+write_dialog_options([X|Xs], [Letter|Letters]) :-
+    write(' ('), write(Letter), write(') '), write(X), nl,
+    write_dialog_options(Xs, Letters).
 
 /* This rule tells you to look at your inventory. */
 

@@ -1,5 +1,5 @@
 :- dynamic at/2.
-:- multifile initialize/1, talk_to/1, dialog_line/3.
+:- multifile initialize/1, talk_to/1, dialog_line/3, write_dialog_options/1.
 
 initialize(people) :-
     assert(at(receptionist, reception)),
@@ -12,7 +12,7 @@ talk_to(doctor) :-
     i_am_at(exam_room1),
     write('The doctor looks up from his desk and says, "Hi I how can I help you"'), nl,
     findall(Line, dialog_line(doctor, Line, _), DialogLines),
-    write_options(DialogLines),
+    write_dialog_options(DialogLines),
     assert(in_dialog(doctor)),
     !.
 
@@ -22,7 +22,7 @@ talk_to(receptionist) :-
     i_am_at(reception),
     write("The receptionist looks up from her computer and says, 'Hi, how can I help you?'"), nl,
     findall(Line, dialog_line(receptionist, Line, _), DialogLines),
-    write_options(DialogLines),
+    write_dialog_options(DialogLines),
     assert(in_dialog(receptionist)),
     !.
 
