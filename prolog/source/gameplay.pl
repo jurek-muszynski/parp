@@ -38,6 +38,11 @@ inspect(X) :-
     describe(X),
     !, nl.
 
+inspect(X) :-
+    holding(X),
+    describe(X),
+    !, nl.
+
 inspect(_) :-
     write('I don''t see it here.'),
     nl.
