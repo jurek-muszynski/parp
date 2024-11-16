@@ -19,11 +19,12 @@ Repozytorium zawiera rozwiązania 3 zadań projektowych z przedmiotu [Paradygmat
 - gnu-smalltalk
 
 ## Instalacja
-1. Sklonuj repozytorium:
+#### 1. Sklonuj repozytorium:
     ```bash
     git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
     ```
-2. Zainstaluj wymagane zależności:
+#### 2. Zainstaluj wymagane zależności:
+- Debian-based
     ```bash
     cd parp2024z
 
@@ -31,4 +32,9 @@ Repozytorium zawiera rozwiązania 3 zadań projektowych z przedmiotu [Paradygmat
     sudo apt-get install -y swi-prolog
     sudo apt-get install -y haskell-platform
     sudo apt-get install -y gnu-smalltalk
+    ```
+- Nix
+    ```bash
+    cd parp2024z
+    nix develop -c $SHELL
     ```
