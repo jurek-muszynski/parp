@@ -56,7 +56,7 @@ go(Direction) :-
     path(Here, Direction, There),
     retract(i_am_at(Here)),
     assert(i_am_at(There)),
-    retract(in_dialog(_)),
+    retractall(in_dialog(_)),
     !, look.
 
 go(Direction) :-
@@ -65,7 +65,7 @@ go(Direction) :-
     can_unlock(door(Here, Direction, There)),
     retract(i_am_at(Here)),
     assert(i_am_at(There)),
-    retract(in_dialog(_)),
+    retractall(in_dialog(_)),
     !, look.
 
 go(Direction) :-
@@ -81,7 +81,7 @@ go(Direction) :-
     can_unlock(encoded_door(Here, Direction, There)),
     retract(i_am_at(Here)),
     assert(i_am_at(There)),
-    retract(in_dialog(_)),
+    retractall(in_dialog(_)),
     !, look.
 
 go(Direction) :-
