@@ -40,7 +40,10 @@ ask(doctor, discharge) :-
 
 ask(receptionist, bus_departure) :-
     holding(discharge_approval),
-    slow_print("The receptionist looks at you and says, 'The bus departs at 5:00 PM'"), nl,
+    slow_print("The receptionist looks at you and says, 'I've just heard you've been discharged by the doctor"), nl,
+    slow_print("She also says, 'The bus departs at 5:00 PM'"), nl,
+    slow_print("She hands you a bus ticket."), nl,
+    assert(holding(bus_ticket)),
     retract(in_dialog(receptionist)),
     !, nl.
 

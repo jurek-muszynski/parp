@@ -1,4 +1,4 @@
-:- dynamic i_am_at/1, holding/1, at/2, in_dialog/1.
+:- dynamic i_am_at/1, holding/1, at/2, in_dialog/1, die/0.
 :- multifile initialize/1, options/1, slow_print/1.
 
 import_source :-
@@ -35,12 +35,13 @@ k :- interact(9).
 l :- interact(10).
 
 die :-
+    reset,
     finish.
 
 finish :-
     nl,
-    write('The game is over. Please enter the "halt." command.'),
-    nl.
+    write('The game is over.'),
+    halt.
 
 check_code(X) :-
     i_am_at(X),

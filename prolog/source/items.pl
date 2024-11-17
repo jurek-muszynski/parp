@@ -13,6 +13,7 @@ initialize(items) :-
 can_unlock(door(padded_cell, s, hallway_one)) :- holding(padded_cell_key).
 can_unlock(door(reception, w, exit)) :- holding(exit_key).
 can_unlock(encoded_door(hallway_two, w, basement)) :- entered_code(hallway_two).
+allows(bus(exit, s, bus_stop)) :- holding(bus_ticket).
 
 /* Items descriptions */
 describe(padded_cell_key) :-
@@ -33,7 +34,7 @@ describe(set_of_notes) :-
     write('Report - 1/2/2020: Patient 12 is showing signs of improvement. The new treatment seems to be working.'), nl,
     write('Report - 1/3/2020: Patient 12 is showing signs of distress. The new treatment is causing unexpected side effects.'), nl,
     write('Report - 1/4/2020: Patient 12 is unresponsive. The new treatment has failed. The patient is to be moved to the basement for further observation'), nl,
-    write('Report - 1/5/2020: Patient 12 has been moved to the basement. The code is his date of birth, The patient is to be monitored closely.'), nl.
+    write('Report - 1/5/2020: Patient 12 has been moved to the basement. The code is his date of birth. The patient is to be monitored closely.'), nl.
 
 describe(discharge_form) :-
     write('A form that seems to be a discharge form. It is filled out with a patient\'s information and seems to be ready for processing.'), nl,
