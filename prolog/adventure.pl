@@ -1,5 +1,5 @@
 :- dynamic i_am_at/1, holding/1, at/2, in_dialog/1.
-:- multifile initialize/1, options/1.
+:- multifile initialize/1, options/1, slow_print/1.
 
 import_source :-
     [source/locations],
@@ -81,4 +81,4 @@ start :-
     reset,
     initialize(items),
     initialize(people),
-    write("You wake up in a padded cell. You don't remember how you got here, but you know you need to escape."), nl.
+    slow_print("You wake up in a padded cell. You don't remember how you got here, but you know you need to escape."), nl.
