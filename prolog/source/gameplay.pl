@@ -129,6 +129,7 @@ interact(Option) :-
 
 look :-
     i_am_at(Place),
+    retractall(in_dialog(_)),
     describe(Place),
     nl,
     notice_at(Place).
