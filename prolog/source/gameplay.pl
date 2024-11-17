@@ -97,17 +97,18 @@ interact(Option) :-
     \+ in_dialog(_),
     i_am_at(Place),
     findall(X, at(X, Place), Entities),
-    nth0(Option, Entities, Entity),
-    (is_person(Entity) -> talk_to(Entity) ; take(Entity)),
-    !.
+    (nth0(Option, Entities, Entity) ->
+        (is_person(Entity) -> talk_to(Entity) ; take(Entity))
+        ; (write('No such interaction.'), nl)
+    ), !.
 
 interact(Option) :-
     in_dialog(Person),
     findall(Line, dialog_line(Person, Line, _), Lines),
-    nth0(Option, Lines, DialogLine),
-    dialog_line(Person, DialogLine, Response),
-    Response,
-    !.
+    (nth0(Option, Lines, DialogLine) ->
+        (dialog_line(Person, DialogLine, Response), Response)
+        ; (write('No such dialog line.'), nl)
+    ), !.
 
 /* This rule tells how to look around you. */
 

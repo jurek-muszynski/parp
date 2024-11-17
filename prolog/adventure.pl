@@ -21,6 +21,7 @@ s :- go(s).
 e :- go(e).
 w :- go(w).
 
+/* Ommit 'e' as it stands for 'east' */
 a :- interact(0).
 b :- interact(1).
 c :- interact(2).
