@@ -35,6 +35,11 @@ encoded_door(hallway_two, w, basement).
 
 describe(reception) :-
     write('You are in the reception.'), nl,
+    write('It is mostly empty, apart from a few flower pots set against the walls and a desk in the middle.'), nl,
+    write('Behind it sits a middle-aged woman, with her face illuminated from a computer screen just before her eyes.'), nl,
+    write('If she looked over the screen, she would set her eyes on a door with a phosphorescent sign that reads "EXIT".'), nl,
+    write('On the wall behind her closer to the corner of the room there is another door with sign,'), nl,
+    write('this time depicting two silhouettes - male and female.'), nl,
     write('n - hallway'), nl,
     write('s - hallway'), nl,
     write('e - restroom'), nl,
@@ -43,6 +48,7 @@ describe(reception) :-
 describe(padded_cell) :- 
     write('You are in a padded cell.'), nl,
     write('The walls are covered in a soft, padded material.'), nl,
+    (at(padded_cell_key, padded_cell) -> write('You notice a small key in the corner of the room.'), nl),
     write('s - door to the hallway'), nl.
 
 describe(hallway_one) :-
