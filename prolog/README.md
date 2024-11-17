@@ -14,32 +14,22 @@ Gra w języku Prolog, której celem jest ucieczka z fikcyjnego szpitala psychiat
 
 ## Instrukcja obsługi
 
-### 1. Klowanie repozytorium
-Aby rozpocząć pracę z projektem, sklonuj repozytorium:
 
+### 1. Uruchomienie gry
+Aby uruchomić grę, w wersji prolog, w terminalu, wykonaj następujące kroki:
+1. Przejdź do katalogu prolog
 ```bash
-git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
+cd prolog
 ```
-### 2. Instalacja zależności
-Przejdź do katalogu projektu i zainstaluj wymagane zależności
-```bash
-cd parp2024z
-sudo apt-get update
-sudo apt-get install -y swi-prolog
-sudo apt-get install -y haskell-platform
-sudo apt-get install -y gnu-smalltalk
-```
-### 3. Uruchomienie gry
-Aby uruchomić grę w terminalu, wykonaj następujące kroki:
-1. Otwórz SWI-Prolog:
+2. Otwórz SWI-Prolog:
 ```bash
 swipl
 ```
-2. Załaduj plik z grą:
+3. Załaduj plik z grą:
 ```prolog
 [adventure].
 ```
-3. Rozpocznij rozgrywkę:
+4. Rozpocznij rozgrywkę:
 ```prolog
 start.
 ```
