@@ -10,13 +10,13 @@ is_person(receptionist).
 
 talk_to(Person) :-
     person_descr(Person),
-    findall(Line, dialog_line(doctor, Line, _), DialogLines),
+    findall(Line, dialog_line(Person, Line, _), DialogLines),
     write_dialog_options(DialogLines),
     assert(in_dialog(Person)),
     !.
 
 person_descr(doctor) :-
-    write('The doctor looks up from his desk and says, "Hi I how can I help you"'), nl.
+    write('The doctor looks up from his desk and says, "Hi how can I help you"'), nl.
 person_descr(receptionist) :-
     write("The receptionist looks up from her computer and says, 'Hi, how can I help you?'"), nl.
 
