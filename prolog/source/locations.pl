@@ -14,8 +14,7 @@ path(hallway_one, s, reception).
 
 path(restroom, w, reception).
 
-path(exit, w, reception).
-path(exit, s, bus_stop).
+path(exit, e, reception).
 
 path(exam_room1, w, hallway_two).
 
@@ -29,6 +28,8 @@ door(padded_cell, s, hallway_one).
 door(reception, w, exit).
 
 encoded_door(hallway_two, w, basement).
+
+bus(exit, s, bus_stop).
 
 /* These are locations descriptions */
 

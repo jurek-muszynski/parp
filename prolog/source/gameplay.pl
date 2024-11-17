@@ -91,6 +91,23 @@ go(Direction) :-
     write('The door is locked. You need a code to enter.'),
     !, nl.
 
+go(Direction) :-
+    i_am_at(Here),
+    bus(Here, Direction, There),
+    allows(bus(Here, Direction, There)),
+    retract(i_am_at(Here)),
+    assert(i_am_at(There)),
+    retractall(in_dialog(_)),
+    !, look,
+    die.
+
+go(Direction) :-
+    i_am_at(Here),
+    bus(Here, Direction, There),
+    \+ allows(bus(Here, Direction, There)),
+    write('You need a bus ticket to board the bus.'),
+    !, nl.
+
 go(_) :-
     write("You can't go that way.").
 
