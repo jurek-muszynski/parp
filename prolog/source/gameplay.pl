@@ -94,6 +94,18 @@ go(Direction) :-
 go(_) :-
     write("You can't go that way.").
 
+
+enter_code(Direction) :-
+    i_am_at(Here),
+    encoded_door(Here, Direction, _),
+    write('The door is locked. Enter the code: '),
+    read(InputCode),
+    code(RequiredCode),
+    (InputCode = RequiredCode ->
+        write('The code is correct. The door unlocks!'), nl,
+        assert(entered_code(Here))
+    ;   write('Incorrect code. The door remains locked.'), nl).
+
 /* This rule tells how to interact with people and items */
 
 interact(Option) :-
