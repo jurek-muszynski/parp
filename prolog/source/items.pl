@@ -11,7 +11,7 @@ initialize(items) :-
 
 /* Items capabilities */
 can_unlock(door(padded_cell, s, hallway_one)) :- holding(padded_cell_key).
-can_unlock(door(reception, e, exit)) :- holding(exit_key).
+can_unlock(door(reception, w, exit)) :- holding(exit_key).
 can_unlock(encoded_door(hallway_two, w, basement)) :- entered_code(hallway_two).
 
 /* Items descriptions */

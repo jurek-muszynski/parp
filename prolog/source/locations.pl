@@ -26,7 +26,7 @@ path(basement, e, hallway_two).
 /* Doors between locations */
 
 door(padded_cell, s, hallway_one).
-door(reception, e, exit).
+door(reception, w, exit).
 
 encoded_door(hallway_two, w, basement).
 
