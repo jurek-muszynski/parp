@@ -1,151 +1,67 @@
-/* <The name of this game>, by <your name goes here>. */
+:- dynamic i_am_at/1, holding/1, at/2, in_dialog/1, die/0.
+:- multifile initialize/1, options/1, slow_print/1.
 
-:- dynamic i_am_at/1, at/2, holding/1.
-:- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
+import_source :-
+    [source/locations],
+    [source/items],
+    [source/actions],
+    [source/gameplay],
+    [source/consts].
 
-i_am_at(someplace).
-
-path(someplace, n, differentplace).
-path(someplace, e, someplace).
-path(differentplace, s, someplace).
-
-at(thing, someplace).
-at(sword, differentplace).
-
-/* These rules describe how to pick up an object. */
-
-take(X) :-
-        holding(X),
-        write('You''re already holding it!'),
-        !, nl.
-
-take(X) :-
-        i_am_at(Place),
-        at(X, Place),
-        retract(at(X, Place)),
-        assert(holding(X)),
-        write('OK.'),
-        !, nl.
-
-take(_) :-
-        write('I don''t see it here.'),
-        nl.
-
-
-/* These rules describe how to put down an object. */
-
-drop(X) :-
-        holding(X),
-        i_am_at(Place),
-        retract(holding(X)),
-        assert(at(X, Place)),
-        write('OK.'),
-        !, nl.
-
-drop(_) :-
-        write('You aren''t holding it!'),
-        nl.
-
-
-/* These rules define the direction letters as calls to go/1. */
+reset :-
+    retractall(at(_, _)),
+    retractall(i_am_at(_)),
+    retractall(alive(_)),
+    retractall(holding(_)),
+    retractall(in_dialog(_)),
+    assert(i_am_at(padded_cell)).
 
 n :- go(n).
-
 s :- go(s).
-
 e :- go(e).
-
 w :- go(w).
 
-
-/* This rule tells how to move in a given direction. */
-
-go(Direction) :-
-        i_am_at(Here),
-        path(Here, Direction, There),
-        retract(i_am_at(Here)),
-        assert(i_am_at(There)),
-        !, look.
-
-go(_) :-
-        write('You can''t go that way.').
-
-
-/* This rule tells how to look about you. */
-
-look :-
-        i_am_at(Place),
-        describe(Place),
-        nl,
-        notice_objects_at(Place),
-        nl.
-
-/* These rules set up a loop to mention all the objects
-   in your vicinity. */
-
-notice_objects_at(Place) :-
-        at(X, Place),
-        write('There is a '), write(X), write(' here.'), nl,
-        fail.
-
-notice_objects_at(_).
-
-/* This rule tells you to look at your inventory. */
-inventory :-
-        holding(X),
-        write('You are holding a '), write(X), nl,
-        fail.
-
-inventory :- holding(_), nl.
-
-inventory :-
-        \+ holding(_), write('You are empty-handed.').
-
-
-/* This rule tells how to die. */
+/* Ommit 'e' as it stands for 'east' */
+a :- interact(0).
+b :- interact(1).
+c :- interact(2).
+d :- interact(3).
+f :- interact(4).
+g :- interact(5).
+h :- interact(6).
+i :- interact(7).
+j :- interact(8).
+k :- interact(9).
+l :- interact(10).
 
 die :-
-        finish.
-
-
-/* Under UNIX, the "halt." command quits Prolog but does not
-   remove the output window. On a PC, however, the window
-   disappears before the final output can be seen. Hence this
-   routine requests the user to perform the final "halt." */
+    reset,
+    finish.
 
 finish :-
-        nl,
-        write('The game is over. Please enter the "halt." command.'),
-        nl.
-
-
-/* This rule just writes out game instructions. */
+    nl,
+    write('The game is over.'),
+    halt.
 
 instructions :-
-        nl,
-        write('Enter commands using standard Prolog syntax.'), nl,
-        write('Available commands are:'), nl,
-        write('start.             -- to start the game.'), nl,
-        write('n.  s.  e.  w.     -- to go in that direction.'), nl,
-        write('take(Object).      -- to pick up an object.'), nl,
-        write('drop(Object).      -- to put down an object.'), nl,
-        write('look.              -- to look around you again.'), nl,
-        write('inventory.         -- to see what you are holding.'), nl,
-        write('instructions.      -- to see this message again.'), nl,
-        write('halt.              -- to end the game and quit.'), nl,
-        nl.
-
-
-/* This rule prints out instructions and tells where you are. */
+    nl,
+    write('Enter commands using standard Prolog syntax.'), nl,
+    write('Available commands are:'), nl,
+    write('start.                  -- to start or reset the game.'), nl,
+    write('n.  s.  e.  w.          -- to go in that direction.'), nl,
+    write('a.  b.  c.  d.  ...     -- to select an interaction'), nl,
+    write('drop(Object).           -- to put down an object.'), nl,
+    write('inspect(Object).        -- to inspect an object.'), nl,
+    write('look.                   -- to look around you again.'), nl,
+    write('inventory.              -- to see what you are holding.'), nl,
+    write('instructions.           -- to see this message again.'), nl,
+    write('halt.                   -- to end the game and quit.'), nl,
+    write('enter_code(Direction).  -- to enter the code for a door (surround it with parenthesis).'), nl,
+    nl.
 
 start :-
-        instructions,
-        look.
-
-
-/* These rules describe the various rooms.  Depending on
-   circumstances, a room may have more than one description. */
-
-describe(someplace) :- write('You are someplace.'), nl.
-describe(differentplace) :- write('You are in a different place.'), nl.
-
+    import_source,
+    reset,
+    initialize(items),
+    initialize(people),
+    slow_print("You wake up in a padded cell. You don't remember how you got here, but you know you need to escape."), nl.
