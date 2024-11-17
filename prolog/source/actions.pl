@@ -34,10 +34,7 @@ ask(doctor, discharge) :-
     \+ holding(discharge_form),
     write('The doctor looks at you and says, "I cannot discharge you until you have the proper paperwork. Please find your discharge form."'), nl,
     write('The doctor has just sent you back to your padded cell and collected all of your belongings.'), nl,
-    retractall(holding(_)),
-    retract(i_am_at(exam_room1)),
-    assert(i_am_at(padded_cell)),
-    retract(in_dialog(doctor)),
+    start,
     !, nl.
 
 ask(receptionist, bus_departure) :-
