@@ -19,12 +19,13 @@ Repozytorium zawiera rozwiązania 3 zadań projektowych z przedmiotu [Paradygmat
 - gnu-smalltalk
 
 ## Instalacja
+### Debian-based
 #### 1. Sklonuj repozytorium:
 ```bash
 git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
 ```
 #### 2. Zainstaluj wymagane zależności:
-- Debian-based
+
     ```bash
     cd parp2024z
 
@@ -33,8 +34,21 @@ git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
     sudo apt-get install -y haskell-platform
     sudo apt-get install -y gnu-smalltalk
     ```
-- Nix
+### Nix
+- Jeśli ma się skonfigurowane SSH w GitLabie
     ```bash
+    # Uruchom grę w Prologu
+    nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#prolog
+    # Uruchom grę w Haskellu # (w przyszłości)
+    nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#haskell
+    # Uruchom grę w Smalltalku # (w przyszłości)
+    nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#smalltalk
+    ```
+- W przeciwnym wypadku
+    ```bash
+    git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
     cd parp2024z
-    nix develop -c $SHELL
+    nix run .#prolog
+    nix run .#haskell
+    nix run .#smalltalk
     ```
