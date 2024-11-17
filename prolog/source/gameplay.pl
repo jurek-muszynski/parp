@@ -1,3 +1,5 @@
+:- multifile write_dialog_options/1.
+
 /* These rules describe how to pick up an object. */
 
 take(X) :-
@@ -35,6 +37,11 @@ drop(_) :-
 inspect(X) :-
     i_am_at(Place),
     at(X, Place),
+    describe(X),
+    !, nl.
+
+inspect(X) :-
+    holding(X),
     describe(X),
     !, nl.
 
@@ -84,35 +91,72 @@ go(Direction) :-
 go(_) :-
     write("You can't go that way.").
 
+/* This rule tells how to interact with people and items */
+
+interact(Option) :-
+    \+ in_dialog(_),
+    i_am_at(Place),
+    findall(X, at(X, Place), Entities),
+    (nth0(Option, Entities, Entity) ->
+        (is_person(Entity) -> talk_to(Entity) ; take(Entity))
+        ; (write('No such interaction.'), nl)
+    ), !.
+
+interact(Option) :-
+    in_dialog(Person),
+    findall(Line, dialog_line(Person, Line, _), Lines),
+    (nth0(Option, Lines, DialogLine) ->
+        (dialog_line(Person, DialogLine, Response), Response)
+        ; (write('No such dialog line.'), nl)
+    ), !.
+
 /* This rule tells how to look around you. */
 
 look :-
     i_am_at(Place),
     describe(Place),
     nl,
-    notice_objects_at(Place),
-    nl.
+    notice_at(Place).
 
-/* These rules set up a loop to mention all the objects
-in your vicinity. */
-
-notice_objects_at(Place) :-
-    at(X, Place),
-    write('There is a '), write(X), write(' here.'), nl,
+notice_at(Place) :-
+    findall(X, at(X, Place), Entities),
+    write_options(Entities),
     fail.
 
-notice_objects_at(_).
+notice_at(_).
 
-notice_people_at(Place) :-
-    at(X, Place),
-    write('There is a '), write(X), write(' here.'), nl,
-    fail.
+write_options([]).
+write_options(Xs) :-
+    Xs \= [],
+    write('Interactions: '), nl,
+    options(Options),
+    write_options(Xs, Options), nl.
 
-notice_people_at(_).
+write_options([], _).
+write_options(_, []).
+write_options([X|Xs], [Letter|Letters]) :-
+    write('  ('), write(Letter), write(') '),
+    (is_person(X) -> write('Talk to the ') ; write('Pick up the ')),
+    write(X), nl,
+    write_options(Xs, Letters).
+
+write_dialog_options(Xs) :-
+    write('Dialog options: '), nl,
+    options(Options),
+    write_dialog_options(Xs, Options).
+
+write_dialog_options([], _).
+write_dialog_options([X|Xs], [Letter|Letters]) :-
+    write(' ('), write(Letter), write(') '), write(X), nl,
+    write_dialog_options(Xs, Letters).
 
 /* This rule tells you to look at your inventory. */
 
-inventory :-
-    \+ (holding(_)) ->
-        write('You are empty handed.'), nl; 
-        (write('You have: '), nl, (holding(X), write(' --> '), write(X), nl, fail ; true)).
+write_items([]).
+write_items([X|Xs]) :-
+    write(' --> '), write(X), nl,
+    write_items(Xs).
+
+inventory :- 
+    findall(Item, holding(Item), Items),
+    write_items(Items).
