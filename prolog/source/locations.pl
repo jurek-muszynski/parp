@@ -1,5 +1,4 @@
-:- multifile path/3, describe/1, door/3, encoded_door/3.
-
+:- multifile path/3, describe/1, door/3, encoded_door/3, slow_print/1.
 /* Paths between locations */
 
 path(hallway_two, n, reception).
@@ -91,11 +90,3 @@ describe(bus_stop) :-
     nl,
     slow_print("*** THE END ***"), nl.
 
-slow_print(Text) :-
-    string_chars(Text, Chars),
-    maplist(print_with_delay, Chars).
-
-print_with_delay(Char) :-
-    write(Char),
-    flush_output,
-    sleep(0.05).
