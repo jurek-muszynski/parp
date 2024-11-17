@@ -48,6 +48,7 @@ describe(reception) :-
 describe(padded_cell) :- 
     write('You are in a padded cell.'), nl,
     write('The walls are covered in a soft, padded material.'), nl,
+    write('There are no windows, the only connection with the outside world is a heavy door'), nl,
     (at(padded_cell_key, padded_cell) -> write('You notice a small key in the corner of the room.'), nl),
     write('s - door to the hallway'), nl.
 
