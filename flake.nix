@@ -11,8 +11,11 @@
       in {
         packages.prolog = pkgs.writeShellApplication {
           name = "choroszcz-escape-pl";
-          runtimeInputs = [ pkgs.wsi-prolog ];
-          text = builtins.readFile ./prolog/run.sh;
+          runtimeInputs = [ pkgs.swi-prolog ];
+          text = ''
+            cd "${./.}/prolog"
+            ./run.sh
+          '';
         };
 
         devShell = pkgs.mkShell {
