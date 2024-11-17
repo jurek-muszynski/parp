@@ -35,7 +35,7 @@ ask(doctor, discharge) :-
     \+ holding(discharge_form),
     slow_print('The doctor looks at you and says, "I cannot discharge you until you have the proper paperwork. Please find your discharge form."'), nl,
     slow_print('The doctor has just sent you back to your padded cell and collected all of your belongings.'), nl,
-    start.
+    start,
     !, nl.
 
 ask(receptionist, bus_departure) :-
