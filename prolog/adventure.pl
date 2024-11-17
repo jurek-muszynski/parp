@@ -73,7 +73,7 @@ instructions :-
     write('inventory.               -- to see what you are holding.'), nl,
     write('instructions.            -- to see this message again.'), nl,
     write('halt.                    -- to end the game and quit.'), nl,
-    write('check_code(Location).    -- to check the code for a door.'), nl,
+    write('check_code(Current_Location).    -- to check the code for a door.'), nl,
     nl.
 
 start :-

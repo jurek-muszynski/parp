@@ -16,6 +16,7 @@ path(hallway_one, s, reception).
 path(restroom, w, reception).
 
 path(exit, w, reception).
+path(exit, s, bus_stop).
 
 path(exam_room1, w, hallway_two).
 
@@ -74,4 +75,27 @@ describe(restroom) :-
 
 describe(exit) :-
     write('You are at the exit.'), nl,
-    write('e - reception'), nl.
+    write('e - reception'), nl,
+    write('s - bus stop'), nl.
+
+describe(bus_stop) :-
+    nl,
+    slow_print("You step out of the asylum into the crisp evening air."), nl,
+    slow_print("The world feels strange, almost unfamiliar."), nl,
+    slow_print("You walk to the nearest bus stop and sit down."), nl,
+    nl,
+    slow_print("A bus arrives. The sign reads: 'Bialystok'."), nl,
+    slow_print("You board the bus, unsure of what lies ahead, but hopeful."), nl,
+    nl,
+    slow_print("The engine hums as the bus drives away, taking you toward a new beginning..."), nl,
+    nl,
+    slow_print("*** THE END ***"), nl.
+
+slow_print(Text) :-
+    string_chars(Text, Chars),
+    maplist(print_with_delay, Chars).
+
+print_with_delay(Char) :-
+    write(Char),
+    flush_output,
+    sleep(0.05).
