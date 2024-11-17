@@ -49,7 +49,7 @@ describe(padded_cell) :-
     write('You are in a padded cell.'), nl,
     write('The walls are covered in a soft, padded material.'), nl,
     write('There are no windows, the only connection with the outside world is a heavy door'), nl,
-    (at(padded_cell_key, padded_cell) -> write('You notice a small key in the corner of the room.'), nl),
+    (once(at(padded_cell_key, padded_cell)) -> write('You notice a small key in the corner of the room.'), nl; true),
     write('s - door to the hallway'), nl.
 
 describe(hallway_one) :-
@@ -77,7 +77,7 @@ describe(exam_room1) :-
     write('This room is stark and clinical, with a single examination table at its center covered in worn white sheets.'), nl,
     write('A cabinet filled with dusty medical equipment and supplies stands in the corner, its glass doors slightly cracked.'), nl,
     write('The air feels heavy, and there\'s a faint smell of alcohol and old paper lingering here.'), nl,
-    (at(patient_file, exam_room1)) -> write('You notice a desk with a pile of documents and a medical file on top.'), nl,
+    (once(at(patient_file, exam_room1)) -> write('You notice a desk with a pile of documents and a medical file on top.'), nl; true),
     write('w - hallway'), nl.
 
 describe(exam_room2) :-
@@ -85,7 +85,7 @@ describe(exam_room2) :-
     write('This room is eerily silent. The examination table is overturned, and scattered papers litter the floor.'), nl,
     write('Broken glass glistens faintly in the dim light, and a single chair sits in the corner, its back turned toward you.'), nl,
     write('There\'s a faint coppery smell in the air that makes you uneasy.'), nl,
-    (at(set_of_notes, exam_room2) -> write('You notice a set of notes on the floor, partially hidden under the table.'), nl),
+    (once(at(set_of_notes, exam_room2)) -> write('You notice a set of notes on the floor, partially hidden under the table.'), nl; true),
     write('n - hallway'), nl.
 
 describe(basement) :-
@@ -93,7 +93,7 @@ describe(basement) :-
     write('The air here is cold and damp, with the faint hum of machinery echoing throughout the space.'), nl,
     write('The walls are lined with exposed pipes, some of them dripping water onto the concrete floor.'), nl,
     write('In the faint light, you can see scattered tools and boxes, but the place feels foreboding, as if it holds secrets best left undiscovered.'), nl,
-    (at(exit_key, basement) -> write('You notice a key on the floor, glinting in the dim light.'), nl),
+    (once(at(exit_key, basement)) -> write('You notice a key on the floor, glinting in the dim light.'), nl; true),
     write('e - hallway'), nl.
 
 describe(restroom) :-
@@ -101,7 +101,7 @@ describe(restroom) :-
     write('The restroom is small and sterile, with cracked mirrors above the sinks and water dripping slowly from a leaky faucet.'), nl,
     write('The faint smell of cleaning chemicals lingers in the air, mixed with something more foul from an unseen corner.'), nl,
     write('The tiled floor is slick, reflecting the dim light from a single bulb overhead.'), nl,
-    (at(discharge_form, restroom) -> write('You notice a form on the sink, partially filled out.'), nl),
+    (once(at(discharge_form, restroom)) -> write('You notice a form on the sink, partially filled out.'), nl; true),
     write('w - reception'), nl.
 
 describe(exit) :-
