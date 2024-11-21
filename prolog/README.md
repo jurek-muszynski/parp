@@ -1,10 +1,11 @@
 # Dokumentacja do Projektu "Ucieczka z Choroszczy"
 
-Gra w języku Prolog, której celem jest ucieczka z fikcyjnego szpitala psychiatrycznego w Choroszczy i dotarcie do najbliższego miasta, Białegostoku. Gracz eksploruje różne pomieszczenia, rozwiązuje zagadki, zbiera przedmioty, wchodzi w interakcje z NPC (pacjentami/lekarzami) i podejmuje decyzje w ograniczonym czasie.
+Gra w języku Prolog, której celem jest ucieczka z fikcyjnego szpitala psychiatrycznego w Choroszczy i dotarcie do najbliższego miasta, Białegostoku. Gracz eksploruje różne pomieszczenia, rozwiązuje zagadki, zbiera przedmioty, wchodzi w interakcje z NPC (pacjentami/lekarzami).
 
 ---
 
 ## Spis Treści
+1. [Założenia przed a aktualny stan projektu](#założenia-przed-a-aktualny-stan-projektu)
 1. [Instrukcja Obsługi](#instrukcja-obsługi)
 1. [Mechanika Gry](#mechanika-gry)  
 2. [Lokacje](#lokacje)  
@@ -12,11 +13,37 @@ Gra w języku Prolog, której celem jest ucieczka z fikcyjnego szpitala psychiat
 4. [System Przedmiotów](#system-przedmiotów)  
 5. [Autorzy](#autorzy) 
 
+## Założenia przed a aktualny stan projektu
+
+Motywy: 
+
+* Zamknięte drzwi, które otwiera się przy pomocy karty/kodu dostępowego, który musi być odnaleziony gdzieś na mapie :white_check_mark: 
+* Ograniczony czas, gracz może mieć określoną liczbe =\> każda akcja zużywa jedną turę, czas mija to gracz przegrywa :x: 
+* Rozmowa z pacjentem/lekarzem =\> postacie dostarczą graczowi pewne wskazówki, jedynie wtedy gdy ma on wcześniej konkretne przedmioty (artefakty, dokumentacje, wydruk z badań) :white_check_mark: 
+
+Lokacje: 
+
+* Recepcja =\> jeden z początkowych punktów gry :white_check_mark: 
+* Korytarz =\> zawiera drzwi do różnych pomieszczeń, w których znajdowałyby się artefakty/kartoteki pacjentów itd. :white_check_mark: 
+* Sala zabiegowa =\> jedna ze "specjalnych" sal, ma zamknięte drzwi, a za nimi znajdować się mogą pewne zagadki do rozwiązania, kluczowe do pełnej realizacji gry :white_check_mark: 
+* Piwnica =\> jest tam bilet na autobus do Białegostoku, ostatni element konieczny do ucieczki :white_check_mark: / :x: 
+* Przystanek =\> koniec gry :white_check_mark: 
+
 ## Instrukcja obsługi
 
 
 ### 1. Uruchomienie gry
 Aby uruchomić grę, w wersji prolog, w terminalu, wykonaj następujące kroki:
+```bash
+git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
+cd parp2024z
+cd prolog
+swipl
+[adventure].
+start.
+```
+
+
 1. Przejdź do katalogu prolog
 ```bash
 cd prolog
@@ -37,7 +64,7 @@ Wszystkie dostępne akcje i komendy są opisane w sekcji **Instructions** w grze
 ```prolog
 instructions.
 ```
-## Mechanika Gry
+## Motywy w grze
 
 - **Zamknięte drzwi:**  
   W grze występują drzwi, które można otworzyć bez użycia klucza oraz które wymagają kluczy odnalezionych w różnych lokacjach.
@@ -48,7 +75,9 @@ instructions.
 
 ## Lokacje
 
-### 1. Padded cell (Cela wyściełana)
+<img src="prolog/figures/diagram.png" height="500px" align="center"/>
+
+### 1. Cela
 - **Opis:** Gracz budzi się w zamkniętej, wyściełanej celi bez wspomnień o tym, jak się tu znalazł.  
 - **Zawartość:** Klucz potrzebny do otwarcia drzwi od celi.  
 - **Wyjście:** Drzwi prowadzące do recepcji (zamknięte, wymagają klucza). 
