@@ -38,10 +38,12 @@ Aby uruchomić grę, w wersji prolog, w terminalu, wykonaj następujące kroki:
 git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
 cd parp2024z/prolog
 swipl
+```
+
+```prolog
 [adventure].
 start.
 ```
-
 
 1. Przejdź do katalogu prolog
 ```bash
