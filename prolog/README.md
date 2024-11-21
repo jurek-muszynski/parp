@@ -36,8 +36,7 @@ Lokacje:
 Aby uruchomić grę, w wersji prolog, w terminalu, wykonaj następujące kroki:
 ```bash
 git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
-cd parp2024z
-cd prolog
+cd parp2024z/prolog
 swipl
 [adventure].
 start.
