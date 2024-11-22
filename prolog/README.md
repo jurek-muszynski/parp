@@ -107,10 +107,10 @@ instructions.
   - Dokument do wypisania ze szpitala (potrzebny do otwarcia dalszej drogi).  
   - NPC (lekarz): Można z nim porozmawiać, ale tylko jeśli gracz posiada odpowiednie przedmioty.
 
-### 5. Piwnica  
+### 6. Piwnica  
 - **Opis:** Ostateczny cel gracza w szpitalu. Znajduje się tu bilet na autobus do Białegostoku.  
 
-### 6. Wyjście  
+### 7. Wyjście  
 - **Opis:** Końcowy punkt gry, gdzie gracz może udać się do przystanku autobusowego lub wrócić do recepcji.
 
 
