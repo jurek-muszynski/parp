@@ -116,7 +116,7 @@ instructions.
 
 ## Postacie NPC
 
-### Pacjenci i lekarze  
+### Lekarz i Recepcjonistka  
 NPC dostarczają graczowi wskazówki, ale tylko wtedy, gdy spełnione są określone warunki (np. posiadanie odpowiedniego przedmiotu).  
 
 #### Przykładowy dialog:
