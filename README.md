@@ -39,7 +39,7 @@ git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
     ```bash
     # Uruchom grę w Prologu
     nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#prolog
-    # Uruchom grę w Haskellu # (w przyszłości)
+    # Uruchom grę w Haskellu
     nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#haskell
     # Uruchom grę w Smalltalku # (w przyszłości)
     nix run git+ssh://git@gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z#smalltalk
