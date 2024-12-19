@@ -158,9 +158,9 @@ NPC mają zdefiniowane dialogi i interakcje, które zależą od stanu gracza.
 
 ---
 
-## Przykład Wyjścia z Gry
+## Przykład Rozgrywki
 
-Przykład wyjścia po wpisaniu `look` w recepcji:
+Przykład po wpisaniu `look` w recepcji:
 
 ```
 You are at the Reception.
