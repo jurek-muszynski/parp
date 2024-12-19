@@ -13,6 +13,7 @@ instructionsText = intercalate "\n"
   , "  inventory              -- See what you are holding."
   , "  restart                -- Restart the game."
   , "  quit                   -- Quit the game."
+  , "  help                   -- Show this list of commands."
   ]
 
 -- Główna funkcja pętli gry
@@ -39,6 +40,9 @@ gameLoop state = do
       gameLoop state
     Move dir -> processMove dir state
     Interact option -> processInteraction option state
+    Help -> do
+      putStrLn instructionsText
+      gameLoop state
     Unknown -> do
       putStrLn "I don't understand that command."
       gameLoop state
@@ -63,22 +67,43 @@ processInteraction option state =
 describeCurrentLocation :: State.State -> IO ()
 describeCurrentLocation state = do
   let currentRoomIdx = State.playerLocation state
-      (room, _) = (State.worldMap state) !! currentRoomIdx
-  putStrLn $ "\n" ++ State.roomName room
+      (room, connections) = (State.worldMap state) !! currentRoomIdx
+      directions = map (\(dir, (nextRoom, _)) -> (dir, (State.roomName . fst) (State.worldMap state !! nextRoom))) connections
+      interactibles = Gameplay.interactionList state
+
+  -- Room details
+  putStrLn $ "\nYou are at the " ++ State.roomName room ++ "."
   maybe (return ()) putStrLn (State.roomDescription room)
-  putStrLn "You see:"
-  mapM_ (putStrLn . (" - " ++) . showInteractible) (Gameplay.interactionList state)
+
+  -- Available directions
+  if null directions
+    then putStrLn "There are no exits."
+    else do
+      putStrLn "Available directions:"
+      mapM_ (\(dir, name) -> putStrLn $ "  " ++ show dir ++ " - " ++ name) directions
+
+  -- Items and people in the room
+  if null interactibles
+    then putStrLn "You see no items or people to interact with."
+    else do
+      putStrLn "You see:"
+      mapM_ (putStrLn . ("  - " ++) . showInteractible state) interactibles
 
 -- Wyświetla przedmioty w ekwipunku
 showInventory :: State.State -> IO ()
 showInventory state = do
-  putStrLn "You are carrying:"
-  mapM_ putStrLn (map (\itemIdx -> "- " ++ State.name ((State.allItems state) !! itemIdx)) (State.inventory state))
+  if null (State.inventory state)
+    then putStrLn "You are carrying: nothing"
+    else do
+      putStrLn "You are carrying:"
+      mapM_ (putStrLn . (" - " ++) . show) (State.inventory state)
 
 -- Wyświetla opis możliwych interakcji
-showInteractible :: Gameplay.Interactible -> String
-showInteractible (Gameplay.Item idx) = "Item #" ++ show idx
-showInteractible (Gameplay.Person idx) = "Person #" ++ show idx
+showInteractible :: State.State -> Gameplay.Interactible -> String
+showInteractible state (Gameplay.Item idx) =
+  let item = (State.allItems state) !! idx
+  in show item -- Use the Show instance of Item
+showInteractible _ (Gameplay.Person idx) = show idx
 
 -- Parsuje polecenie użytkownika
 data Command = Move State.Direction
@@ -87,6 +112,7 @@ data Command = Move State.Direction
              | Inventory
              | Restart
              | Quit
+             | Help
              | Unknown
 
 parseCommand :: String -> Command
@@ -98,3 +124,6 @@ parseCommand input = case input of
   "look" -> Look
   "inventory" -> Inventory
   "restart" -> Restart
+  "help" -> Help -- Parse the help command
+  "quit" -> Quit
+  _ -> Unknown
