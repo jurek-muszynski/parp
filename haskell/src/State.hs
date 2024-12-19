@@ -2,6 +2,7 @@ module State where
 
 import Data.Tree (Tree)
 
+-- Definicja początkowego stanu gry
 initialState :: State
 initialState = State
   { playerLocation = 0
@@ -9,45 +10,67 @@ initialState = State
   , inConversation = Nothing
   , allItems = []
   , worldMap =
-    [(State.Room
-      { roomName = "padded cell"
-      , roomDescription = Nothing
-      , itemsInARoom = []
-      , peopleInARoom = [] }, [])] }
+    [ (0, [(South, (1, Nothing))])  -- Padded Cell to Hallway 1
+    , (1, [(North, (0, Nothing)), (South, (2, Nothing))]) -- Hallway 1 paths
+    , (2, [(North, (1, Nothing))])  -- Reception to Hallway 1
+    ]
+  }
 
+-- Definicja struktury stanu gry
 data State = State
-  { playerLocation :: RoomIdx
-  , inventory :: [ItemIdx]
-  , inConversation :: Maybe (PersonIdx, DialogOption)
-  , allItems :: [Item]
-  , worldMap :: Map }
+  { playerLocation :: RoomIdx -- Aktualna lokalizacja gracza
+  , inventory :: [ItemIdx] -- Lista przedmiotów w inwentarzu gracza
+  , inConversation :: Maybe (PersonIdx, DialogOption) -- Aktualna rozmowa
+  , allItems :: [Item] -- Lista wszystkich przedmiotów w grze
+  , worldMap :: Map -- Mapa lokacji i połączeń
+  } deriving (Show)
 
+-- Identyfikatory dla lokacji, przedmiotów i osób
 type RoomIdx = Int
 type ItemIdx = Int
 type PersonIdx = Int
-data Item = Item { name :: String }
 
--- | Map of all the game locations in a shape of a graph
-type Map = [(Room, [(RoomIdx, RequiredItem)])]
--- | Item required to go to another room, `Nothing` if one isn't needed
+-- Definicja przedmiotu
+data Item = Item
+  { name :: String
+  } deriving (Show)
+
+-- Typ mapy: lista par lokacji i możliwych połączeń
+type Map = [(RoomIdx, [(Direction, (RoomIdx, RequiredItem))])]
+
+-- Przedmiot wymagany do przejścia między lokacjami, `Nothing` oznacza brak wymagań
 type RequiredItem = Maybe ItemIdx
 
+-- Kierunki ruchu
+data Direction = North | South | East | West deriving (Show, Eq)
+
+-- Definicja lokacji
 data Room = Room
   { roomName :: String
   , roomDescription :: Maybe String
   , itemsInARoom :: [ItemIdx]
-  , peopleInARoom :: [Person] }
+  , peopleInARoom :: [Person]
+  } deriving (Show)
 
+-- Definicja osoby
 data Person = Person
   { personName :: String
   , personDescription :: Maybe String
-  -- Tree with an empty root, which is the same as a list of subtrees
-  -- Each node has a tuple of a dialog option id, a question
-  -- and a function returning a response to the question and the new state
-  , dialogTree :: [Tree (Int, String, State -> (String, State))] }
+  , dialogTree :: [Tree (Int, String, State -> (String, State))]
+  }
 
-data DialogOption = Root | Other Int
+-- Ręczna instancja Show dla struktury Person
+instance Show Person where
+  show person =
+    "Person { personName = " ++ show (personName person) ++
+    ", personDescription = " ++ show (personDescription person) ++
+    " }"
 
+-- Opcje dialogowe
+data DialogOption = Root | Other Int deriving (Show)
+
+-- Wynik działania funkcji zmieniającej stan gry
 data Result = Result
   { message :: Maybe String
-  , newState :: State }
+  , newState :: State
+  } deriving (Show)
