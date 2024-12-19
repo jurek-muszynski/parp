@@ -110,7 +110,7 @@ askDoctorDischarge state =
 receptionist :: Person
 receptionist = Person
   { personName = "Receptionist"
-  , personDescription = Just "A middle-aged woman sits behind the desk, typing on a computer."
+  , personDescription = "A middle-aged woman sits behind the desk, typing on a computer."
   , dialogTree = [Node (1, "Ask about the bus schedule.", askReceptionistBus) []]
   }
 
@@ -118,9 +118,10 @@ receptionist = Person
 doctor :: Person
 doctor = Person
   { personName = "Doctor"
-  , personDescription = Just "The doctor looks up from his desk, appearing calm but focused."
+  , personDescription = "The doctor looks up from his desk, appearing calm but focused."
   , dialogTree = [Node (1, "Ask for discharge.", askDoctorDischarge) []]
   }
+
 
 -- Definicja struktury stanu gry
 data State = State
@@ -161,18 +162,16 @@ data Room = Room
 -- Definicja osoby
 data Person = Person
   { personName :: String
-  , personDescription :: Maybe String
+  , personDescription :: String
   , dialogTree :: [Tree (Int, String, State -> (String, State))]
   }
 
 instance Show Item where
-  show item = "Item { name = " ++ show (name item) ++ ", description = " ++ show (description item) ++ " }"
+  show item = show (name item) ++ " - " ++ show (description item)
 
 instance Show Person where
   show person =
-    "Person { personName = " ++ show (personName person) ++
-    ", personDescription = " ++ show (personDescription person) ++
-    " }"
+    show (personName person) ++ " - " ++ show (personDescription person)
 
 -- Opcje dialogowe
 data DialogOption = Root | Other Int deriving (Show)
