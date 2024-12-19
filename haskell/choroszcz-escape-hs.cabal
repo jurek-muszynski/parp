@@ -1,7 +1,7 @@
 cabal-version:        3.0
 name:                 choroszcz-escape-hs
 version:              0.1.0.0
-author:               Jerzy Muszyński, Mateusz Lewko, Sebastian Wojciechowski
+author:               author
 category:             Game
 build-type:           Simple
 
@@ -10,8 +10,9 @@ common warnings
 
 common shared-settings
     default-language: GHC2021
-    build-depends:    base ^>=4.18.2.1,
-                      containers ^>=0.6
+    build-depends: base >=4.17 && <4.18,
+               containers ^>=0.6
+`
 
 library
     import:           shared-settings
