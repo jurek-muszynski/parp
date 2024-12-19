@@ -10,9 +10,24 @@ initialState = State
   , inConversation = Nothing
   , allItems = []
   , worldMap =
-    [ (0, [(South, (1, Nothing))])  -- Padded Cell to Hallway 1
-    , (1, [(North, (0, Nothing)), (South, (2, Nothing))]) -- Hallway 1 paths
-    , (2, [(North, (1, Nothing))])  -- Reception to Hallway 1
+    [ (Room
+        { roomName = "Padded Cell"
+        , roomDescription = Nothing
+        , itemsInARoom = []
+        , peopleInARoom = [] }
+      , [(South, (1, Nothing))])  -- Padded Cell to Hallway 1
+    , (Room
+        { roomName = "Hallway number 1"
+        , roomDescription = Nothing
+        , itemsInARoom = []
+        , peopleInARoom = [] }
+      , [(North, (0, Nothing)), (South, (2, Nothing))]) -- Hallway 1 paths
+    , (Room
+        { roomName = "Reception"
+        , roomDescription = Nothing
+        , itemsInARoom = []
+        , peopleInARoom = [] }
+      ,[(North, (1, Nothing))])  -- Reception to Hallway 1
     ]
   }
 
@@ -36,7 +51,7 @@ data Item = Item
   } deriving (Show)
 
 -- Typ mapy: lista par lokacji i możliwych połączeń
-type Map = [(RoomIdx, [(Direction, (RoomIdx, RequiredItem))])]
+type Map = [(Room, [(Direction, (RoomIdx, RequiredItem))])]
 
 -- Przedmiot wymagany do przejścia między lokacjami, `Nothing` oznacza brak wymagań
 type RequiredItem = Maybe ItemIdx

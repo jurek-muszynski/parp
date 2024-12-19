@@ -3,7 +3,6 @@ module Main where
 import Data.List (intercalate)
 import qualified State
 import qualified Gameplay
-import qualified Locations
 
 instructionsText :: String
 instructionsText = intercalate "\n"
@@ -45,7 +44,7 @@ gameLoop state = do
       gameLoop state
 
 -- Funkcja obsługująca ruch gracza
-processMove :: Gameplay.Direction -> State.State -> IO ()
+processMove :: State.Direction -> State.State -> IO ()
 processMove dir state =
   let State.Result msg newState = Gameplay.move dir state
   in do
@@ -82,7 +81,7 @@ showInteractible (Gameplay.Item idx) = "Item #" ++ show idx
 showInteractible (Gameplay.Person idx) = "Person #" ++ show idx
 
 -- Parsuje polecenie użytkownika
-data Command = Move Gameplay.Direction
+data Command = Move State.Direction
              | Interact Int
              | Look
              | Inventory
@@ -92,10 +91,10 @@ data Command = Move Gameplay.Direction
 
 parseCommand :: String -> Command
 parseCommand input = case input of
-  "n" -> Move Gameplay.North
-  "s" -> Move Gameplay.South
-  "e" -> Move Gameplay.East
-  "w" -> Move Gameplay.West
+  "n" -> Move State.North
+  "s" -> Move State.South
+  "e" -> Move State.East
+  "w" -> Move State.West
   "look" -> Look
   "inventory" -> Inventory
   "restart" -> Restart

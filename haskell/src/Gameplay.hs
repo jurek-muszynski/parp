@@ -7,15 +7,14 @@ move :: State.Direction -> State.State -> State.Result
 move direction state =
   let currentRoomIdx = State.playerLocation state
       mapGraph = State.worldMap state
-  in case lookup currentRoomIdx mapGraph of
-       Just paths -> case lookup direction paths of
-         Just (nextRoom, requiredItem) ->
-           if maybe True (`elem` State.inventory state) requiredItem
-           then let newState = state { State.playerLocation = nextRoom }
-                in State.Result (Just $ "You moved " ++ show direction ++ ".") newState
-           else State.Result (Just "You need a specific item to go that way.") state
-         Nothing -> State.Result (Just "You can't go that way.") state
-       Nothing -> State.Result (Just "Invalid location.") state
+      paths = snd (mapGraph !! currentRoomIdx)
+  in case lookup direction paths of
+    Just (nextRoom, requiredItem) ->
+      if maybe True (`elem` State.inventory state) requiredItem
+      then let newState = state { State.playerLocation = nextRoom }
+        in State.Result (Just $ "You moved " ++ show direction ++ ".") newState
+      else State.Result (Just "You need a specific item to go that way.") state
+    Nothing -> State.Result (Just "You can't go that way.") state
 
 -- Interakcje z przedmiotami i osobami
 interact :: Int -> State.State -> State.Result
