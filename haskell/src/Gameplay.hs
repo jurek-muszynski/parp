@@ -2,7 +2,6 @@ module Gameplay where
 
 import qualified State
 
--- Ruch gracza między lokacjami
 move :: State.Direction -> State.State -> State.Result
 move direction state =
   let currentRoomIdx = State.playerLocation state
@@ -20,7 +19,7 @@ verifyCode state nextRoom = do
   putStrLn "You need to enter a code to unlock the door:"
   putStr "> "
   code <- getLine
-  if code == "01.01.1990"  -- Kod poprawny
+  if code == "01.01.1990" 
     then do
       putStrLn "The door unlocks, and you move forward."
       return state { State.playerLocation = nextRoom }
@@ -29,7 +28,6 @@ verifyCode state nextRoom = do
       return state
 
 
--- Interakcje z przedmiotami i osobami
 interact :: Int -> State.State -> State.Result
 interact option state =
   let currentRoomIdx = State.playerLocation state
@@ -49,7 +47,6 @@ interact option state =
          in State.Result (Just $ "You talked to " ++ personName) state
        Nothing -> State.Result (Just "Invalid interaction option.") state
 
--- Lista możliwych interakcji w danej lokacji
 data Interactible = Item State.ItemIdx | Person State.Person deriving (Show)
 
 interactionList :: State.State -> [Interactible]
@@ -59,3 +56,24 @@ interactionList state =
       items = map Item $ State.itemsInARoom room
       people = map Person $ State.peopleInARoom room
   in items ++ people
+
+takeItem :: State.State -> String -> IO State.State
+takeItem state itemName =
+  let currentRoomIdx = State.playerLocation state
+      (room, _) = (State.worldMap state) !! currentRoomIdx
+      itemsInRoom = State.itemsInARoom room
+      allItems = State.allItems state
+      maybeItemIdx = lookup itemName [(State.name (allItems !! idx), idx) | idx <- itemsInRoom]
+  in case maybeItemIdx of
+       Just itemIdx ->
+         let updatedRoom = room { State.itemsInARoom = filter (/= itemIdx) itemsInRoom }
+             updatedMap = take currentRoomIdx (State.worldMap state)
+                          ++ [(updatedRoom, snd (State.worldMap state !! currentRoomIdx))]
+                          ++ drop (currentRoomIdx + 1) (State.worldMap state)
+             updatedState = state { State.inventory = itemIdx : State.inventory state, State.worldMap = updatedMap }
+         in do
+              putStrLn $ "You picked up the " ++ itemName ++ "."
+              return updatedState
+       Nothing -> do
+         putStrLn $ "There is no " ++ itemName ++ " here."
+         return state

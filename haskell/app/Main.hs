@@ -30,7 +30,7 @@ gameLoop :: State.State -> IO ()
 gameLoop state = do
   putStrLn "\nWhat would you like to do?"
   putStr "> "
-  hFlush stdout -- Wymusza natychmiastowe wyświetlenie znaku zachęty
+  hFlush stdout
   command <- getLine
   case parseCommand command of
     Quit -> putStrLn "Thanks for playing!" >> return ()
@@ -43,12 +43,16 @@ gameLoop state = do
       gameLoop state
     Move dir -> processMove dir state
     Interact option -> processInteraction option state
+    Take itemName -> do
+      newState <- Gameplay.takeItem state itemName
+      gameLoop newState
     Help -> do
       putStrLn instructionsText
       gameLoop state
     Unknown -> do
       putStrLn "I don't understand that command."
       gameLoop state
+
 
 -- Funkcja obsługująca ruch gracza
 processMove :: State.Direction -> State.State -> IO ()
@@ -120,7 +124,9 @@ showInventory state = do
     then putStrLn "You are carrying: nothing"
     else do
       putStrLn "You are carrying:"
-      mapM_ (putStrLn . (" - " ++) . show) (State.inventory state)
+      let items = map (\idx -> (State.allItems state) !! idx) (State.inventory state)
+      mapM_ (putStrLn . (" - " ++) . State.name) items
+
 
 -- Wyświetla opis możliwych interakcji
 showInteractible :: State.State -> Gameplay.Interactible -> String
@@ -130,15 +136,18 @@ showInteractible state (Gameplay.Item idx) =
 showInteractible _ (Gameplay.Person idx) = show idx
 
 -- Parsuje polecenie użytkownika
-data Command = Move State.Direction
-             | Interact Int
-             | Look
-             | Inventory
-             | Restart
-             | Quit
-             | Help
-             | Unknown
+data Command
+  = Move State.Direction
+  | Interact Int
+  | Look
+  | Inventory
+  | Restart
+  | Quit
+  | Help
+  | Take String -- Nowy konstruktor
+  | Unknown
 
+          
 parseCommand :: String -> Command
 parseCommand input = case input of
   "n" -> Move State.North
@@ -148,6 +157,8 @@ parseCommand input = case input of
   "look" -> Look
   "inventory" -> Inventory
   "restart" -> Restart
-  "help" -> Help -- Parse the help command
+  "help" -> Help
   "quit" -> Quit
+  ('t':'a':'k':'e':' ':rest) -> Take rest -- Nowa komenda "take"
   _ -> Unknown
+

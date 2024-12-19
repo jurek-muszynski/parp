@@ -2,7 +2,6 @@ module State where
 
 import Data.Tree (Tree(..))
 
--- Definicja początkowego stanu gry
 initialState :: State
 initialState = State
   { playerLocation = 0
@@ -51,30 +50,30 @@ initialState = State
     [ (Room
         { roomName = "Padded Cell"
         , roomDescription = Just "The walls are covered in a soft, padded material. There are no windows, the only connection with the outside world is a heavy door."
-        , itemsInARoom = [0] -- Padded Cell Key
+        , itemsInARoom = [0] 
         , peopleInARoom = [] }
-      , [(South, (1, Nothing))])  -- Padded Cell to Hallway 1
+      , [(South, (1, Just 0))])
 
     , (Room
         { roomName = "Hallway number 1"
         , roomDescription = Just "The walls here are lined with faded paintings of serene landscapes and old photographs of what appears to be hospital staff."
         , itemsInARoom = []
         , peopleInARoom = [] }
-      , [(North, (0, Nothing)), (South, (2, Nothing))]) -- Hallway 1 paths
+      , [(North, (0, Nothing)), (South, (2, Nothing))])
 
     , (Room
         { roomName = "Reception"
         , roomDescription = Just "It is mostly empty, apart from a few flower pots set against the walls and a desk in the middle. Behind it sits a middle-aged woman illuminated by the computer screen."
         , itemsInARoom = []
-        , peopleInARoom = [receptionist] } -- Store receptionist directly
-      , [(North, (1, Nothing)), (East, (3, Nothing)), (South, (4, Nothing)), (West, (8, Nothing))]) -- Reception to Hallway 1
+        , peopleInARoom = [receptionist] } 
+      , [(North, (1, Nothing)), (East, (3, Nothing)), (South, (4, Nothing)), (West, (8, Just 1))]) 
 
     , (Room
         { roomName = "Restroom"
         , roomDescription = Just "The restroom is small and sterile, with cracked mirrors above the sinks and water dripping from a leaky faucet."
-        , itemsInARoom = [3] -- Discharge Form
+        , itemsInARoom = [3] 
         , peopleInARoom = [] }
-      , [(West, (2, Nothing))]) -- Restroom to Reception
+      , [(West, (2, Nothing))])
 
 
     , (Room
@@ -87,34 +86,33 @@ initialState = State
     , (Room
         { roomName = "Exam Room 1"
         , roomDescription = Just "This room is stark and clinical, with a single examination table at its center covered in worn white sheets."
-        , itemsInARoom = [2] -- Patient File
-        , peopleInARoom = [doctor] } -- Store doctor directly
-      , [(West, (4, Nothing))]) -- Exam Room 1 to Hallway 2
+        , itemsInARoom = [2]
+        , peopleInARoom = [doctor] }
+      , [(West, (4, Nothing))])
 
     , (Room
         { roomName = "Exam Room 2"
         , roomDescription = Just "This room is eerily silent. The examination table is overturned, and scattered papers litter the floor."
-        , itemsInARoom = [4] -- Set of Notes
+        , itemsInARoom = [4]
         , peopleInARoom = [] }
-      , [(North, (4, Nothing))]) -- Exam Room 2 to Hallway 2
+      , [(North, (4, Nothing))])
 
     , (Room
         { roomName = "Basement"
         , roomDescription = Just "The air here is cold and damp, with the faint hum of machinery echoing throughout the space."
-        , itemsInARoom = [1] -- Exit Key
+        , itemsInARoom = [1]
         , peopleInARoom = [] }
-      , [(East, (4, Nothing))]) -- Basement to Hallway 2
+      , [(East, (4, Nothing))])
 
     , (Room
         { roomName = "Exit"
         , roomDescription = Just "The door leads to the outside world, with sunlight streaming in and the sound of birds chirping in the distance."
-        , itemsInARoom = [] -- Exit Key
+        , itemsInARoom = []
         , peopleInARoom = [] }
       , [(East, (2, Nothing))])
     ]
   }
 
--- Helper Functions
 askReceptionistBus :: State -> (String, State)
 askReceptionistBus state =
   ("The receptionist tells you the bus departs at 5:00 PM.", state)
@@ -123,7 +121,6 @@ askDoctorDischarge :: State -> (String, State)
 askDoctorDischarge state =
   ("The doctor approves your discharge.", state)
 
--- Define the receptionist
 receptionist :: Person
 receptionist = Person
   { personName = "Receptionist"
@@ -131,7 +128,6 @@ receptionist = Person
   , dialogTree = [Node (1, "Ask about the bus schedule.", askReceptionistBus) []]
   }
 
--- Define the doctor
 doctor :: Person
 doctor = Person
   { personName = "Doctor"
@@ -140,35 +136,28 @@ doctor = Person
   }
 
 
--- Definicja struktury stanu gry
 data State = State
-  { playerLocation :: RoomIdx -- Aktualna lokalizacja gracza
-  , inventory :: [ItemIdx] -- Lista przedmiotów w inwentarzu gracza
-  , inConversation :: Maybe (Person, DialogOption) -- Aktualna rozmowa
-  , allItems :: [Item] -- Lista wszystkich przedmiotów w grze
-  , worldMap :: Map -- Mapa lokacji i połączeń
+  { playerLocation :: RoomIdx 
+  , inventory :: [ItemIdx] 
+  , inConversation :: Maybe (Person, DialogOption) 
+  , allItems :: [Item] 
+  , worldMap :: Map
   } deriving (Show)
 
--- Identyfikatory dla lokacji, przedmiotów i osób
 type RoomIdx = Int
 type ItemIdx = Int
 
--- Definicja przedmiotu
 data Item = Item
   { name :: String
   , description :: String
   }
 
--- Typ mapy: lista par lokacji i połączeń
 type Map = [(Room, [(Direction, (RoomIdx, RequiredItem))])]
 
--- Przedmiot wymagany do przejścia między lokacjami, `Nothing` oznacza brak wymagań
 type RequiredItem = Maybe ItemIdx
 
--- Kierunki ruchu
 data Direction = North | South | East | West deriving (Show, Eq)
 
--- Definicja lokacji
 data Room = Room
   { roomName :: String
   , roomDescription :: Maybe String
@@ -176,7 +165,6 @@ data Room = Room
   , peopleInARoom :: [Person]
   } deriving (Show)
 
--- Definicja osoby
 data Person = Person
   { personName :: String
   , personDescription :: String
@@ -190,10 +178,8 @@ instance Show Person where
   show person =
     show (personName person) ++ " - " ++ show (personDescription person)
 
--- Opcje dialogowe
 data DialogOption = Root | Other Int deriving (Show)
 
--- Wynik działania funkcji zmieniającej stan gry
 data Result = Result
   { message :: Maybe String
   , newState :: State
