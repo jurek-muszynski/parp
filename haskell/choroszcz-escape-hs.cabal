@@ -1,0 +1,26 @@
+cabal-version:        3.0
+name:                 choroszcz-escape-hs
+version:              0.1.0.0
+author:               author
+category:             Game
+build-type:           Simple
+
+common warnings
+    ghc-options:      -Wall
+
+common shared-settings
+    default-language: GHC2021
+    build-depends: base >=4.17 && <4.18,
+               containers ^>=0.6
+`
+
+library
+    import:           shared-settings
+    exposed-modules:  State, Gameplay
+    hs-source-dirs:   src
+
+executable choroszcz-escape-exe
+    import:           warnings, shared-settings
+    main-is:          Main.hs
+    build-depends:    choroszcz-escape-hs
+    hs-source-dirs:   app

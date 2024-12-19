@@ -4,13 +4,15 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        projectName = "choroszcz-escape";
         pkgs = import nixpkgs { inherit system; };
+        haskellPkgs = pkgs.haskellPackages;
       in {
         packages.prolog = pkgs.writeShellApplication {
-          name = "choroszcz-escape-pl";
+          name = projectName + "-pl";
           runtimeInputs = [ pkgs.swi-prolog ];
           text = ''
             cd "${./.}/prolog"
@@ -18,9 +20,20 @@
           '';
         };
 
+        packages.haskell = let
+          haskellProjectName = projectName + "-hs";
+        in
+          haskellPkgs.callCabal2nix haskellProjectName ./haskell {};
+
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
+            # prolog
             swi-prolog
+
+            # haskell
+            haskell-language-server
+            ghcid
+            cabal-install
           ];
         };
       });
