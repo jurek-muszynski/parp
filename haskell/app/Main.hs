@@ -1,5 +1,7 @@
 module Main where
 
+import System.IO (hFlush, stdout)
+
 import Data.List (intercalate)
 import qualified State
 import qualified Gameplay
@@ -28,6 +30,7 @@ gameLoop :: State.State -> IO ()
 gameLoop state = do
   putStrLn "\nWhat would you like to do?"
   putStr "> "
+  hFlush stdout -- Wymusza natychmiastowe wyświetlenie znaku zachęty
   command <- getLine
   case parseCommand command of
     Quit -> putStrLn "Thanks for playing!" >> return ()
@@ -49,11 +52,32 @@ gameLoop state = do
 
 -- Funkcja obsługująca ruch gracza
 processMove :: State.Direction -> State.State -> IO ()
-processMove dir state =
-  let State.Result msg newState = Gameplay.move dir state
-  in do
-    maybe (return ()) putStrLn msg
-    gameLoop newState
+processMove dir state = do
+  let result = Gameplay.move dir state
+  case result of
+    State.Result Nothing newState -> do
+      if State.playerLocation state == 4 && dir == State.West
+        then do
+          updatedState <- Gameplay.verifyCode state 7  -- Sprawdzenie kodu
+          gameLoop updatedState
+        else gameLoop newState
+    State.Result (Just msg) newState -> do
+      putStrLn msg
+      gameLoop newState
+
+
+verifyCodeIO :: State.State -> Int -> IO State.State
+verifyCodeIO state nextRoom = do
+  putStrLn "Please enter the code to unlock the door:"
+  putStr "> "
+  code <- getLine
+  if code == "01.01.1990"  -- Kod poprawny
+    then do
+      putStrLn "The door unlocks, and you proceed to the next room."
+      return state { State.playerLocation = nextRoom }
+    else do
+      putStrLn "Incorrect code. You cannot enter the room."
+      return state
 
 -- Funkcja obsługująca interakcje
 processInteraction :: Int -> State.State -> IO ()

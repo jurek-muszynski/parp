@@ -19,17 +19,34 @@ initialState = State
         }
     , Item
         { name = "Patient File"
-        , description = "A file containing detailed information about a patient. The pages are worn and some notes are scribbled in the margins, hinting at a troubled history."
+        , description = unlines
+            [ "A file containing detailed information about a patient. The pages are worn and some notes are scribbled in the margins, hinting at a troubled history."
+            , "Patient File - Patient 12:"
+            , "Name: Unknown"
+            , "Date of Birth: 01.01.1990"
+            ]
         }
     , Item
         { name = "Discharge Form"
-        , description = "A form that seems to be a discharge form. It is filled out with a patient's information and seems to be ready for processing."
+        , description = unlines
+            [ "A form that seems to be a discharge form. It is filled out with a patient's information and seems to be ready for processing."
+            , "Discharge Form - Patient 12:"
+            , "Name: Unknown"
+            , "Date of discharge: 31.02.2020"
+            ]
         }
     , Item
         { name = "Set of Notes"
-        , description = "A set of handwritten notes, filled with observations and theories. The handwriting is hurried and some parts are difficult to read, but they seem to contain important information."
+        , description = unlines
+            [ "A set of handwritten notes, filled with observations and theories. The handwriting is hurried and some parts are difficult to read, but they seem to contain important information."
+            , "Report - 1/2/2020: Patient 12 is showing signs of improvement. The new treatment seems to be working."
+            , "Report - 1/3/2020: Patient 12 is showing signs of distress. The new treatment is causing unexpected side effects."
+            , "Report - 1/4/2020: Patient 12 is unresponsive. The new treatment has failed. The patient is to be moved to the basement for further observation."
+            , "Report - 1/5/2020: Patient 12 has been moved to the basement. The code is his date of birth. The patient is to be monitored closely."
+            ]
         }
     ]
+
   , worldMap =
     [ (Room
         { roomName = "Padded Cell"

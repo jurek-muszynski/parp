@@ -11,10 +11,23 @@ move direction state =
   in case lookup direction paths of
     Just (nextRoom, requiredItem) ->
       if maybe True (`elem` State.inventory state) requiredItem
-      then let newState = state { State.playerLocation = nextRoom }
-        in State.Result (Just $ "You moved " ++ show direction ++ ".") newState
+      then State.Result Nothing state { State.playerLocation = nextRoom }
       else State.Result (Just "You need a specific item to go that way.") state
     Nothing -> State.Result (Just "You can't go that way.") state
+
+verifyCode :: State.State -> Int -> IO State.State
+verifyCode state nextRoom = do
+  putStrLn "You need to enter a code to unlock the door:"
+  putStr "> "
+  code <- getLine
+  if code == "01.01.1990"  -- Kod poprawny
+    then do
+      putStrLn "The door unlocks, and you move forward."
+      return state { State.playerLocation = nextRoom }
+    else do
+      putStrLn "The code is incorrect. You cannot enter the room."
+      return state
+
 
 -- Interakcje z przedmiotami i osobami
 interact :: Int -> State.State -> State.Result
