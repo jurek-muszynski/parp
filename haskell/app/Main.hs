@@ -98,3 +98,4 @@ parseCommand input = case input of
   "look" -> Look
   "inventory" -> Inventory
   "restart" -> Restart
+  otherwise -> Unknown
