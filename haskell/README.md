@@ -74,7 +74,7 @@ Interakcje zależą od przedmiotów i NPC w danej lokacji. Niektóre interakcje 
 
 ## Lokacje
 
-<img src="prolog/figures/diagram.png" height="500px" align="center"/>
+<img src="haskell/figures/diagram.png" height="500px" align="center"/>
 
 
 1. **Cela**:
