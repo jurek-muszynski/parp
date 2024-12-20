@@ -28,35 +28,36 @@ main = do
 
 gameLoop :: State.State -> IO ()
 gameLoop state = do
-  putStrLn "\nWhat would you like to do?"
-  putStr "> "
-  hFlush stdout
-  command <- getLine
-  case parseCommand command of
-    Quit -> putStrLn "Thanks for playing!" >> return ()
-    Restart -> putStrLn "Game restarted." >> gameLoop State.initialState
-    Look -> do
-      describeCurrentLocation state
-      gameLoop state
-    Inventory -> do
-      showInventory state
-      gameLoop state
-    Move dir -> do
-      processMove dir state
-      describeCurrentLocation state
-    Interact option -> processInteraction option state
-    Take itemName -> do
-      newState <- Gameplay.takeItem state itemName
-      gameLoop newState
-    Dialog -> do
-      newState <- processDialog state
-      gameLoop newState
-    Help -> do
-      putStrLn instructionsText
-      gameLoop state
-    Unknown -> do
-      putStrLn "\ESC[31m\n[ALERT]: Wrong command, try again! \ESC[0m"
-      gameLoop state
+  if State.playerLocation state == 9
+    then endGame
+    else do
+      putStrLn "\nWhat would you like to do?"
+      putStr "> "
+      hFlush stdout
+      command <- getLine
+      case parseCommand command of
+        Quit -> putStrLn "Thanks for playing!" >> return ()
+        Restart -> putStrLn "Game restarted." >> gameLoop State.initialState
+        Look -> do
+          describeCurrentLocation state
+          gameLoop state
+        Inventory -> do
+          showInventory state
+          gameLoop state
+        Move dir -> processMove dir state
+        Interact option -> processInteraction option state
+        Take itemName -> do
+          newState <- Gameplay.takeItem state itemName
+          gameLoop newState
+        Dialog -> do
+          newState <- processDialog state
+          gameLoop newState
+        Help -> do
+          putStrLn instructionsText
+          gameLoop state
+        Unknown -> do
+          putStrLn "\ESC[31m\n[ALERT]: Wrong command, try again! \ESC[0m"
+          gameLoop state
 
 
 processDialog :: State.State -> IO State.State
@@ -84,16 +85,18 @@ processMove dir state = do
   let result = Gameplay.move dir state
   case result of
     State.Result Nothing newState -> do
-      if State.playerLocation state == 4 && dir == State.West
-        then do
-          updatedState <- Gameplay.verifyCode state 7
-          gameLoop updatedState
-      else if State.playerLocation state == 9
-        then return ()
-        else gameLoop newState
+      if State.playerLocation newState == 9
+        then endGame
+        else if State.playerLocation state == 4 && dir == State.West
+          then do
+            updatedState <- Gameplay.verifyCode state 7
+            gameLoop updatedState
+          else gameLoop newState
     State.Result (Just msg) newState -> do
-      putStrLn msg
+      putStrLn ("\ESC[31m\n[ALERT]: " ++ msg ++ " \ESC[0m")
       gameLoop newState
+
+
 
 
 verifyCodeIO :: State.State -> Int -> IO State.State
@@ -126,8 +129,8 @@ describeCurrentLocation state = do
   putStrLn $ "\ESC[1m" ++ "\nYou are at the " ++ State.roomName room ++ ".\n" ++ "\ESC[0m"
   maybe (return ()) putStrLn (State.roomDescription room)
 
-  if null directions && null interactibles
-    then putStrLn "Thanks for playing!" >> return () -- nie działające wyjście z gry
+  if currentRoomIdx == 9
+    then endGame
     else do
       if null directions
         then putStrLn "\nThere are no exits."
@@ -140,6 +143,19 @@ describeCurrentLocation state = do
         else do
           putStrLn "\nYou see:"
           mapM_ (putStrLn . ("  - " ++) . showInteractible state) interactibles
+
+endGame :: IO ()
+endGame = do
+  putStrLn "\ESC[32mCongratulations! You have reached the final room and completed the game.\ESC[0m"
+  putStrLn "\ESC[1m\nYou step out of the asylum into the crisp evening air."
+  putStrLn "The world feels strange, almost unfamiliar."
+  putStrLn "You walk to the nearest bus stop and sit down."
+  putStrLn "A bus arrives. The sign reads: 'Bialystok'."
+  putStrLn "You board the bus, unsure of what lies ahead, but hopeful."
+  putStrLn "The engine hums as the bus drives away, taking you toward a new beginning..."
+  putStrLn "\n*** THE END ***\ESC[0m"
+  return () -- Kończy program
+
 
 showInventory :: State.State -> IO ()
 showInventory state = do
