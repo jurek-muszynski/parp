@@ -6,7 +6,7 @@ Gra w języku Haskell, której celem jest ucieczka z fikcyjnego szpitala psychia
 ---
 ## Spis Treści
 
-1. [Opis Gry](#opis-gry)
+1. [Stan Pracy](#stan-pracy)
 2. [Instrukcja Obsługi](#instrukcja-obsługi)
 3. [Mechanika Gry](#mechanika-gry)
 4. [Lokacje](#lokacje)
@@ -15,6 +15,11 @@ Gra w języku Haskell, której celem jest ucieczka z fikcyjnego szpitala psychia
 7. [Struktura Systemu](#struktura-systemu)
 8. [Struktura Kodu](#struktura-kodu)
 
+## Stan Pracy
+- [x] implementacja wszystkich pomieszczeń oraz połączen między nimi bazując na projekcie prologowym
+- [x] umożliwianie koniecznych interakcji (poruszanie się, podnoszenie przedmiotów, rozmowa z NPC, wpisywanie kodu)
+- [x] warunkowe przejścia między pomieszczeniami i zakończenie Rozgrywki
+- [ ] implementacja dodatkowych funkcji (przyglądanie się przedmiotom, odkładanie przedmiotów, rozbudowane dialogi, połaczone z przekazywaniem przedmiotów) 
 
 ## Instrukcja Obsługi
 
