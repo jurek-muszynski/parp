@@ -93,7 +93,7 @@ processMove dir state = do
             gameLoop updatedState
           else gameLoop newState
     State.Result (Just msg) newState -> do
-      putStrLn ("\ESC[31m\n[ALERT]: " ++ msg ++ " \ESC[0m")
+      putStrLn msg
       gameLoop newState
 
 
