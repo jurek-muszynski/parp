@@ -14,20 +14,20 @@ move direction state =
     Just (nextRoom, requiredItem) ->
       if maybe True (`elem` State.inventory state) requiredItem
       then State.Result Nothing state { State.playerLocation = nextRoom }
-      else State.Result (Just "You need a specific item to go that way.") state
-    Nothing -> State.Result (Just "You can't go that way.") state
+      else State.Result (Just "\ESC[32m\n[INFO]: You need a specific item to go that way. \ESC[0m") state
+    Nothing -> State.Result (Just "\ESC[31m\n[ALERT]: You can't go that way! \ESC[0m") state
 
 verifyCode :: State.State -> Int -> IO State.State
 verifyCode state nextRoom = do
-  putStrLn "You need to enter a code to unlock the door:"
+  putStrLn "\nYou need to enter a code to unlock the door:"
   putStr "> "
   code <- getLine
   if code == "01.01.1990" 
     then do
-      putStrLn "The door unlocks, and you move forward."
+      putStrLn "\ESC[32m\n[INFO]: The door unlocks, and you move forward. \ESC[0m"
       return state { State.playerLocation = nextRoom }
     else do
-      putStrLn "The code is incorrect. You cannot enter the room."
+      putStrLn "\ESC[31m\n[ALERT]: The code is incorrect. You cannot enter the room.\ESC[0m"
       return state
 
 
@@ -41,14 +41,14 @@ interact option state =
   in case lookup option interactibles of
        Just (Left itemIdx) ->
          if itemIdx `elem` State.inventory state
-         then State.Result (Just "You already have this item.") state
+         then State.Result (Just "\ESC[31m\n[ALERT]: You already have this item. \ESC[0m") state
          else
            let newState = state { State.inventory = itemIdx : State.inventory state }
-           in State.Result (Just "You picked up an item.") newState
+           in State.Result (Just "\ESC[32m\n[INFO]: You picked up an item. \ESC[0m") newState
        Just (Right person) ->
          let personName = State.personName person
          in State.Result (Just $ "You talked to " ++ personName) state
-       Nothing -> State.Result (Just "Invalid interaction option.") state
+       Nothing -> State.Result (Just "\ESC[31m\n[ALERT]: Invalid interaction option. \ESC[0m") state
 
 data Interactible = Item State.ItemIdx | Person State.Person deriving (Show)
 
@@ -75,13 +75,12 @@ takeItem state itemName =
                           ++ drop (currentRoomIdx + 1) (State.worldMap state)
              updatedState = state { State.inventory = itemIdx : State.inventory state, State.worldMap = updatedMap }
          in do
-              putStrLn $ "You picked up the " ++ itemName ++ "."
+              putStrLn $ "\ESC[32m\n[ALERT]: You picked up the " ++ itemName ++ ".\ESC[0m"
               return updatedState
        Nothing -> do
-         putStrLn $ "There is no " ++ itemName ++ " here."
+         putStrLn $ "\ESC[31m\n[ALERT]: There is no " ++ itemName ++ " here.\ESC[0m"
          return state
 
--- Obsługuje dialog z wybraną postacią
 runDialog :: State.State -> State.Person -> IO State.State
 runDialog state person = do
   let dialog = State.dialogTree person
@@ -95,9 +94,8 @@ runDialog state person = do
           putStrLn msg
           return newState
         else do
-          -- Wyświetl opcje dialogowe
           mapM_ (\(idx, Node (_, optText, _) _) -> putStrLn $ show idx ++ ". " ++ optText) (zip [0..] subOptions)
-          putStrLn "Choose an option (number):"
+          putStrLn "\nChoose an option (number):"
           choice <- getLine
           case reads choice of
             [(idx, "")] | idx >= 0 && idx < length subOptions -> do
@@ -105,8 +103,8 @@ runDialog state person = do
                   (msg, newState) = nextAction state
               putStrLn msg
               if null nextSubOptions
-                then return newState -- Zakończ dialog, jeśli brak dalszych opcji
+                then return newState
                 else processDialogTree newState (Node (optionId, text, nextAction) nextSubOptions)
             _ -> do
-              putStrLn "Invalid choice."
+              putStrLn "\ESC[31m\n[ALERT]: Invalid choice. \ESC[0m"
               processDialogTree state (Node (optionId, text, action) subOptions)

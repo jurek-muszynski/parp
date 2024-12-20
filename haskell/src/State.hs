@@ -81,7 +81,7 @@ initialState = State
         , roomDescription = Just "The hallway is dimly lit, with flickering lights casting long shadows on the walls. The air is heavy with the smell of disinfectant."
         , itemsInARoom = []
         , peopleInARoom = [] }
-      , [(North, (2, Nothing)), (East, (5, Nothing)), (South, (6, Nothing)), (West, (7, Nothing))]) -- Hallway 2 paths
+      , [(North, (2, Nothing)), (East, (5, Nothing)), (South, (6, Nothing)), (West, (7, Nothing))])
 
     , (Room
         { roomName = "Exam Room 1"
@@ -109,24 +109,39 @@ initialState = State
         , roomDescription = Just "The door leads to the outside world, with sunlight streaming in and the sound of birds chirping in the distance."
         , itemsInARoom = []
         , peopleInARoom = [] }
-      , [(East, (2, Nothing))])
+      , [(East, (2, Nothing)), (West, (9, Just 1))])
+
+    , (Room
+        { roomName = "Bus Stop"
+        , roomDescription = Just $ unlines
+        [ "You step out of the asylum into the crisp evening air."
+        , "The world feels strange, almost unfamiliar."
+        , "You walk to the nearest bus stop and sit down."
+        , "A bus arrives. The sign reads: 'Bialystok'."
+        , "You board the bus, unsure of what lies ahead, but hopeful."
+        , "The engine hums as the bus drives away, taking you toward a new beginning..."
+        , "*** THE END ***"
+        ]
+        , itemsInARoom = []
+        , peopleInARoom = [] }
+      , [])  
     ]
   }
 askReceptionistBus :: State -> (String, State)
 askReceptionistBus state =
-  ("The receptionist tells you the bus departs at 5:00 PM.", state)
+  ("\ESC[32m\n[INFO]: The receptionist tells you the bus departs at 5:00 PM. \ESC[0m", state)
 
 askDoctorDischarge :: State -> (String, State)
 askDoctorDischarge state =
-  ("The doctor approves your discharge.", state)
+  ("\ESC[32m\n[INFO]: The doctor approves your discharge. \ESC[0m", state)
 
 receptionist :: Person
 receptionist = Person
   { personName = "Receptionist"
   , personDescription = "A middle-aged woman sits behind the desk, typing on a computer."
   , dialogTree = Node 
-      (0, "You see a receptionist. What would you like to ask?", \state -> ("", state)) -- Korzeń drzewa
-      [ Node (1, "Ask about the bus schedule.", askReceptionistBus) [] -- Opcja dialogu
+      (0, "\nYou see a receptionist. What would you like to ask?", \state -> ("", state))
+      [ Node (1, "Ask about the bus schedule.", askReceptionistBus) []
       ]
   }
 
@@ -135,8 +150,8 @@ doctor = Person
   { personName = "Doctor"
   , personDescription = "The doctor looks up from his desk, appearing calm but focused."
   , dialogTree = Node 
-      (0, "The doctor looks at you attentively. What would you like to ask?", \state -> ("", state)) -- Korzeń drzewa
-      [ Node (1, "Ask for discharge.", askDoctorDischarge) [] -- Opcja dialogu
+      (0, "The doctor looks at you attentively. What would you like to ask?", \state -> ("", state))
+      [ Node (1, "Ask for discharge.", askDoctorDischarge) []
       ]
   }
 
