@@ -29,7 +29,7 @@ Gra w języku Haskell, której celem jest ucieczka z fikcyjnego szpitala psychia
 
 ```bash
 git clone https://gitlab-stud.elka.pw.edu.pl/parp-z4/parp2024z.git
-cd haskell
+cd parp2024z/haskell/
 ```
 
 2. Zbuduj grę za pomocą Cabal:
