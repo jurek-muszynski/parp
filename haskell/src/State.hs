@@ -160,7 +160,7 @@ doctor = Person
 data State = State
   { playerLocation :: RoomIdx 
   , inventory :: [ItemIdx] 
-  , inConversation :: Maybe (Person, DialogOption) 
+  , inConversation :: Maybe (Person, DialogOpt) 
   , allItems :: [Item] 
   , worldMap :: Map
   } deriving (Show)
@@ -178,6 +178,8 @@ type Map = [(Room, [(Direction, (RoomIdx, RequiredItem))])]
 type RequiredItem = Maybe ItemIdx
 
 data Direction = North | South | East | West deriving (Show, Eq)
+
+type DialogOpt = Int
 
 data Room = Room
   { roomName :: String
@@ -198,8 +200,6 @@ instance Show Item where
 instance Show Person where
   show person =
     show (personName person) ++ " - " ++ show (personDescription person)
-
-data DialogOption = Root | Other Int deriving (Show)
 
 data Result = Result
   { message :: Maybe String

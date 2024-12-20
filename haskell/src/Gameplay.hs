@@ -39,16 +39,16 @@ interact option state =
       people = State.peopleInARoom room
       interactibles = zip [0..] (map Left items ++ map Right people)
   in case lookup option interactibles of
-       Just (Left itemIdx) ->
-         if itemIdx `elem` State.inventory state
-         then State.Result (Just "\ESC[31m\n[ALERT]: You already have this item. \ESC[0m") state
-         else
-           let newState = state { State.inventory = itemIdx : State.inventory state }
-           in State.Result (Just "\ESC[32m\n[INFO]: You picked up an item. \ESC[0m") newState
-       Just (Right person) ->
-         let personName = State.personName person
-         in State.Result (Just $ "You talked to " ++ personName) state
-       Nothing -> State.Result (Just "\ESC[31m\n[ALERT]: Invalid interaction option. \ESC[0m") state
+    Just (Left itemIdx) ->
+      if itemIdx `elem` State.inventory state
+      then State.Result (Just "\ESC[31m\n[ALERT]: You already have this item. \ESC[0m") state
+      else
+        let newState = state { State.inventory = itemIdx : State.inventory state }
+        in State.Result (Just "\ESC[32m\n[INFO]: You picked up an item. \ESC[0m") newState
+    Just (Right person) ->
+      let personName = State.personName person
+      in State.Result (Just $ "You talk to " ++ personName) (state { State.inConversation = Just (person, 0) })
+    Nothing -> State.Result (Just "\ESC[31m\n[ALERT]: Invalid interaction option. \ESC[0m") state
 
 data Interactible = Item State.ItemIdx | Person State.Person deriving (Show)
 

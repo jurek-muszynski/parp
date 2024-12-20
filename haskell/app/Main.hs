@@ -2,6 +2,7 @@ module Main where
 
 import System.IO (hFlush, stdout)
 
+import Text.Read (readMaybe)
 import Data.List (intercalate)
 import qualified State
 import qualified Gameplay
@@ -10,7 +11,7 @@ instructionsText :: String
 instructionsText = intercalate "\n"
   [ "\nAvailable commands:"
   , "  n, s, e, w             -- Move in a direction."
-  , "  a, b, c, d, ...        -- Interact with objects or people."
+  , "  1, 2, 3, 4, ...        -- Pick up objects."
   , "  look                   -- Look around."
   , "  inventory              -- See what you are holding."
   , "  restart                -- Restart the game."
@@ -31,7 +32,9 @@ gameLoop state = do
   if State.playerLocation state == 9
     then endGame
     else do
-      putStrLn "\nWhat would you like to do?"
+      putStrLn (case State.inConversation state of
+        Just _ -> "\nSelect a dialogue option"
+        Nothing -> "\nWhat would you like to do?")
       putStr "> "
       hFlush stdout
       command <- getLine
@@ -198,4 +201,8 @@ parseCommand input = case input of
   "quit" -> Quit
   "talk" -> Dialog
   ('t':'a':'k':'e':' ':rest) -> Take rest
-  _ -> Unknown
+  otherwise -> case readMaybe input of
+    Just opt -> if opt > 0
+      then Interact (opt - 1)
+      else Unknown
+    Nothing -> Unknown
