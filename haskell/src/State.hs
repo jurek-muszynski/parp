@@ -112,7 +112,6 @@ initialState = State
       , [(East, (2, Nothing))])
     ]
   }
-
 askReceptionistBus :: State -> (String, State)
 askReceptionistBus state =
   ("The receptionist tells you the bus departs at 5:00 PM.", state)
@@ -125,15 +124,22 @@ receptionist :: Person
 receptionist = Person
   { personName = "Receptionist"
   , personDescription = "A middle-aged woman sits behind the desk, typing on a computer."
-  , dialogTree = [Node (1, "Ask about the bus schedule.", askReceptionistBus) []]
+  , dialogTree = Node 
+      (0, "You see a receptionist. What would you like to ask?", \state -> ("", state)) -- Korzeń drzewa
+      [ Node (1, "Ask about the bus schedule.", askReceptionistBus) [] -- Opcja dialogu
+      ]
   }
 
 doctor :: Person
 doctor = Person
   { personName = "Doctor"
   , personDescription = "The doctor looks up from his desk, appearing calm but focused."
-  , dialogTree = [Node (1, "Ask for discharge.", askDoctorDischarge) []]
+  , dialogTree = Node 
+      (0, "The doctor looks at you attentively. What would you like to ask?", \state -> ("", state)) -- Korzeń drzewa
+      [ Node (1, "Ask for discharge.", askDoctorDischarge) [] -- Opcja dialogu
+      ]
   }
+
 
 
 data State = State
@@ -168,7 +174,7 @@ data Room = Room
 data Person = Person
   { personName :: String
   , personDescription :: String
-  , dialogTree :: [Tree (Int, String, State -> (String, State))]
+  , dialogTree :: Tree (Int, String, State -> (String, State))
   }
 
 instance Show Item where

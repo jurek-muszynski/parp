@@ -16,6 +16,8 @@ instructionsText = intercalate "\n"
   , "  restart                -- Restart the game."
   , "  quit                   -- Quit the game."
   , "  help                   -- Show this list of commands."
+  , "  take [item]            -- Take an item."
+  , "  talk                   -- Talk to a person."
   ]
 
 -- Główna funkcja pętli gry
@@ -26,6 +28,7 @@ main = do
   gameLoop State.initialState
 
 -- Funkcja pętli gry
+-- Główna funkcja pętli gry
 gameLoop :: State.State -> IO ()
 gameLoop state = do
   putStrLn "\nWhat would you like to do?"
@@ -46,12 +49,36 @@ gameLoop state = do
     Take itemName -> do
       newState <- Gameplay.takeItem state itemName
       gameLoop newState
+    Dialog -> do
+      newState <- processDialog state
+      gameLoop newState
     Help -> do
       putStrLn instructionsText
       gameLoop state
     Unknown -> do
       putStrLn "I don't understand that command."
       gameLoop state
+
+-- Obsługa dialogu z NPC
+processDialog :: State.State -> IO State.State
+processDialog state =
+  let currentRoomIdx = State.playerLocation state
+      (room, _) = (State.worldMap state) !! currentRoomIdx
+      peopleInRoom = State.peopleInARoom room
+  in if null peopleInRoom
+       then do
+         putStrLn "There is no one to talk to here."
+         return state
+       else do
+         mapM_ (\(idx, person) -> putStrLn $ show idx ++ ". " ++ State.personName person) (zip [0..] peopleInRoom)
+         putStrLn "Choose a person to talk to (number):"
+         choice <- getLine
+         case reads choice of
+           [(idx, "")] | idx >= 0 && idx < length peopleInRoom -> 
+             Gameplay.runDialog state (peopleInRoom !! idx)
+           _ -> do
+             putStrLn "Invalid choice."
+             return state
 
 
 -- Funkcja obsługująca ruch gracza
@@ -144,10 +171,10 @@ data Command
   | Restart
   | Quit
   | Help
-  | Take String -- Nowy konstruktor
+  | Take String
+  | Dialog
   | Unknown
 
-          
 parseCommand :: String -> Command
 parseCommand input = case input of
   "n" -> Move State.North
@@ -159,6 +186,6 @@ parseCommand input = case input of
   "restart" -> Restart
   "help" -> Help
   "quit" -> Quit
-  ('t':'a':'k':'e':' ':rest) -> Take rest -- Nowa komenda "take"
+  "talk" -> Dialog -- Dodano komendę "talk"
+  ('t':'a':'k':'e':' ':rest) -> Take rest
   _ -> Unknown
-

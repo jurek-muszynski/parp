@@ -1,5 +1,8 @@
 module Gameplay where
 
+import Data.Tree (Tree(..))
+
+
 import qualified State
 
 move :: State.Direction -> State.State -> State.Result
@@ -77,3 +80,33 @@ takeItem state itemName =
        Nothing -> do
          putStrLn $ "There is no " ++ itemName ++ " here."
          return state
+
+-- Obsługuje dialog z wybraną postacią
+runDialog :: State.State -> State.Person -> IO State.State
+runDialog state person = do
+  let dialog = State.dialogTree person
+  processDialogTree state dialog
+  where
+    processDialogTree state (Node (optionId, text, action) subOptions) = do
+      putStrLn text
+      if null subOptions
+        then do
+          let (msg, newState) = action state
+          putStrLn msg
+          return newState
+        else do
+          -- Wyświetl opcje dialogowe
+          mapM_ (\(idx, Node (_, optText, _) _) -> putStrLn $ show idx ++ ". " ++ optText) (zip [0..] subOptions)
+          putStrLn "Choose an option (number):"
+          choice <- getLine
+          case reads choice of
+            [(idx, "")] | idx >= 0 && idx < length subOptions -> do
+              let Node (_, _, nextAction) nextSubOptions = subOptions !! idx
+                  (msg, newState) = nextAction state
+              putStrLn msg
+              if null nextSubOptions
+                then return newState -- Zakończ dialog, jeśli brak dalszych opcji
+                else processDialogTree newState (Node (optionId, text, nextAction) nextSubOptions)
+            _ -> do
+              putStrLn "Invalid choice."
+              processDialogTree state (Node (optionId, text, action) subOptions)
